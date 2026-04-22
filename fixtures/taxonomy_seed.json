@@ -1,0 +1,144 @@
+[
+  {
+    "model": "capabilities.cluster",
+    "pk": 1,
+    "fields": {
+      "desk": "audience_development",
+      "name": "Service design",
+      "description": "",
+      "order": 1
+    }
+  },
+  {
+    "model": "capabilities.cluster",
+    "pk": 2,
+    "fields": {
+      "desk": "audience_development",
+      "name": "Audience research",
+      "description": "",
+      "order": 2
+    }
+  },
+  {
+    "model": "capabilities.cluster",
+    "pk": 3,
+    "fields": {
+      "desk": "audience_development",
+      "name": "Segmentation",
+      "description": "",
+      "order": 3
+    }
+  },
+  {
+    "model": "capabilities.cluster",
+    "pk": 4,
+    "fields": {
+      "desk": "audience_development",
+      "name": "Conversion",
+      "description": "",
+      "order": 4
+    }
+  },
+  {
+    "model": "capabilities.cluster",
+    "pk": 5,
+    "fields": {
+      "desk": "audience_development",
+      "name": "Engagement & retention",
+      "description": "",
+      "order": 5
+    }
+  },
+  {
+    "model": "capabilities.cluster",
+    "pk": 6,
+    "fields": {
+      "desk": "audience_development",
+      "name": "Community & events",
+      "description": "",
+      "order": 6
+    }
+  },
+  {
+    "model": "capabilities.cluster",
+    "pk": 7,
+    "fields": {
+      "desk": "audience_development",
+      "name": "Growth strategy",
+      "description": "",
+      "order": 7
+    }
+  },
+  {
+    "model": "capabilities.cluster",
+    "pk": 8,
+    "fields": {
+      "desk": "audience_development",
+      "name": "Data & compliance",
+      "description": "",
+      "order": 8
+    }
+  },
+  {
+    "model": "capabilities.cluster",
+    "pk": 9,
+    "fields": {
+      "desk": "audience_development",
+      "name": "Analytics & first-party data",
+      "description": "",
+      "order": 9
+    }
+  },
+
+  {"model":"capabilities.capabilityitem","pk":101,"fields":{"cluster":1,"name":"Service blueprint","order":1}},
+  {"model":"capabilities.capabilityitem","pk":102,"fields":{"cluster":1,"name":"Loyalty ladder","order":2}},
+  {"model":"capabilities.capabilityitem","pk":103,"fields":{"cluster":1,"name":"Value exchange","order":3}},
+  {"model":"capabilities.capabilityitem","pk":104,"fields":{"cluster":1,"name":"Feedback loops","order":4}},
+  {"model":"capabilities.capabilityitem","pk":105,"fields":{"cluster":1,"name":"Needs mapping","order":5}},
+
+  {"model":"capabilities.capabilityitem","pk":201,"fields":{"cluster":2,"name":"Continuous listening","order":1}},
+  {"model":"capabilities.capabilityitem","pk":202,"fields":{"cluster":2,"name":"Competitive landscape","order":2}},
+  {"model":"capabilities.capabilityitem","pk":203,"fields":{"cluster":2,"name":"Audience signals","order":3}},
+  {"model":"capabilities.capabilityitem","pk":204,"fields":{"cluster":2,"name":"Research methods","order":4}},
+  {"model":"capabilities.capabilityitem","pk":205,"fields":{"cluster":2,"name":"Persona creation","order":5}},
+  {"model":"capabilities.capabilityitem","pk":206,"fields":{"cluster":2,"name":"Persona validation","order":6}},
+  {"model":"capabilities.capabilityitem","pk":207,"fields":{"cluster":2,"name":"Persona-content mapping","order":7}},
+
+  {"model":"capabilities.capabilityitem","pk":301,"fields":{"cluster":3,"name":"Behavioural segmentation","order":1}},
+  {"model":"capabilities.capabilityitem","pk":302,"fields":{"cluster":3,"name":"Geo / language segmentation","order":2}},
+  {"model":"capabilities.capabilityitem","pk":303,"fields":{"cluster":3,"name":"New vs returning","order":3}},
+  {"model":"capabilities.capabilityitem","pk":304,"fields":{"cluster":3,"name":"Segment-content strategy","order":4}},
+
+  {"model":"capabilities.capabilityitem","pk":401,"fields":{"cluster":4,"name":"Conversion architecture","order":1}},
+  {"model":"capabilities.capabilityitem","pk":402,"fields":{"cluster":4,"name":"Registration strategy","order":2}},
+
+  {"model":"capabilities.capabilityitem","pk":501,"fields":{"cluster":5,"name":"Engagement definition","order":1}},
+  {"model":"capabilities.capabilityitem","pk":502,"fields":{"cluster":5,"name":"Engagement scoring","order":2}},
+  {"model":"capabilities.capabilityitem","pk":503,"fields":{"cluster":5,"name":"Habit formation","order":3}},
+  {"model":"capabilities.capabilityitem","pk":504,"fields":{"cluster":5,"name":"Churn prevention","order":4}},
+  {"model":"capabilities.capabilityitem","pk":505,"fields":{"cluster":5,"name":"Retention measurement","order":5}},
+  {"model":"capabilities.capabilityitem","pk":506,"fields":{"cluster":5,"name":"Re-engagement","order":6}},
+
+  {"model":"capabilities.capabilityitem","pk":601,"fields":{"cluster":6,"name":"Community design","order":1}},
+  {"model":"capabilities.capabilityitem","pk":602,"fields":{"cluster":6,"name":"Community engagement","order":2}},
+  {"model":"capabilities.capabilityitem","pk":603,"fields":{"cluster":6,"name":"Community health","order":3}},
+  {"model":"capabilities.capabilityitem","pk":604,"fields":{"cluster":6,"name":"Events strategy and operations","order":4}},
+
+  {"model":"capabilities.capabilityitem","pk":701,"fields":{"cluster":7,"name":"Acquisition channels","order":1}},
+  {"model":"capabilities.capabilityitem","pk":702,"fields":{"cluster":7,"name":"Peer cross-promotion","order":2}},
+  {"model":"capabilities.capabilityitem","pk":703,"fields":{"cluster":7,"name":"Growth targets","order":3}},
+  {"model":"capabilities.capabilityitem","pk":704,"fields":{"cluster":7,"name":"Paid acquisition","order":4}},
+  {"model":"capabilities.capabilityitem","pk":705,"fields":{"cluster":7,"name":"Referrals","order":5}},
+
+  {"model":"capabilities.capabilityitem","pk":801,"fields":{"cluster":8,"name":"Consent","order":1}},
+  {"model":"capabilities.capabilityitem","pk":802,"fields":{"cluster":8,"name":"List hygiene","order":2}},
+  {"model":"capabilities.capabilityitem","pk":803,"fields":{"cluster":8,"name":"Contact enrichment","order":3}},
+  {"model":"capabilities.capabilityitem","pk":804,"fields":{"cluster":8,"name":"Org / personal split","order":4}},
+  {"model":"capabilities.capabilityitem","pk":805,"fields":{"cluster":8,"name":"Accessibility","order":5}},
+  {"model":"capabilities.capabilityitem","pk":806,"fields":{"cluster":8,"name":"Language access","order":6}},
+  {"model":"capabilities.capabilityitem","pk":807,"fields":{"cluster":8,"name":"Revenue readiness","order":7}},
+
+  {"model":"capabilities.capabilityitem","pk":901,"fields":{"cluster":9,"name":"Data literacy","order":1}},
+  {"model":"capabilities.capabilityitem","pk":902,"fields":{"cluster":9,"name":"Data champion development","order":2}},
+  {"model":"capabilities.capabilityitem","pk":903,"fields":{"cluster":9,"name":"Activation layer","order":3}}
+]
