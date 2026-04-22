@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
+from django.urls import reverse
 
 from capabilities.models import (
     CapabilityItem,
@@ -59,3 +60,62 @@ class AppendOnlyStateTests(TestCase):
         )
         with self.assertRaises(ValidationError):
             state.full_clean()
+
+
+class ViewSmokeTests(TestCase):
+    """End-to-end GET-200 on the core v0.1 screens, authenticated."""
+
+    @classmethod
+    def setUpTestData(cls):
+        User = get_user_model()
+        cls.user = User.objects.create_user(username="staff", password="x")
+        cls.outlet = Outlet.objects.create(name="El Norte", slug="el-norte", cohort="Wave 3")
+        cluster = Cluster.objects.create(name="Segmentation", order=3)
+        cls.item = CapabilityItem.objects.create(cluster=cluster, name="Behavioural")
+
+    def setUp(self):
+        self.client.login(username="staff", password="x")
+
+    def test_outlet_list_renders(self):
+        resp = self.client.get(reverse("capabilities:outlet_list"))
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, "El Norte")
+
+    def test_outlet_detail_renders(self):
+        resp = self.client.get(reverse("capabilities:outlet_detail", args=[self.outlet.slug]))
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, "Segmentation")
+        self.assertContains(resp, "Behavioural")
+
+    def test_state_create_appends_row(self):
+        resp = self.client.post(
+            reverse("capabilities:state_create", args=[self.outlet.slug]),
+            {
+                "item": self.item.id,
+                "level": CapabilityState.LEVEL_PRACTISING,
+                "evidence_excerpt": "they ran a segment review last week",
+                "source_diagnostic": "",
+            },
+        )
+        self.assertEqual(resp.status_code, 302)
+        state = CapabilityState.objects.get(outlet=self.outlet, item=self.item)
+        self.assertEqual(state.level, CapabilityState.LEVEL_PRACTISING)
+        self.assertEqual(state.set_by, self.user)
+
+    def test_diagnostic_create_redirects_to_detail(self):
+        resp = self.client.post(
+            reverse("diagnostics:diagnostic_create", args=[self.outlet.slug]),
+            {
+                "date": "2026-04-22",
+                "notes_raw": "We talked about their segmentation work.",
+                "notes_summary": "",
+            },
+        )
+        self.assertEqual(resp.status_code, 302)
+        self.assertIn("/diagnostics/", resp.url)
+
+    def test_login_required_redirect(self):
+        self.client.logout()
+        resp = self.client.get(reverse("capabilities:outlet_list"))
+        self.assertEqual(resp.status_code, 302)
+        self.assertIn("/admin/login/", resp.url)
