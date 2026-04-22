@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Log diagnostic — {{ outlet.name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl">
+  <h1 class="text-2xl font-semibold mb-1">Log diagnostic</h1>
+  <p class="text-sm text-stone-600 mb-6">{{ outlet.name }} — paste raw call notes. LLM synthesis will come later; for v0.1 you record state changes manually.</p>
+
+  <form method="post" class="space-y-4 bg-white border rounded p-5">
+    {% csrf_token %}
+    {% for field in form %}
+    <div>
+      <label class="block text-sm font-medium mb-1">{{ field.label }}</label>
+      {{ field }}
+      {% if field.help_text %}
+        <p class="text-xs text-stone-500 mt-1">{{ field.help_text }}</p>
+      {% endif %}
+      {% if field.errors %}
+        <p class="text-xs text-red-600 mt-1">{{ field.errors|join:", " }}</p>
+      {% endif %}
+    </div>
+    {% endfor %}
+    <div class="flex gap-2 pt-2">
+      <button type="submit" class="px-4 py-2 text-sm rounded bg-stone-900 text-white hover:bg-stone-700">Save draft</button>
+      <a href="{% url 'capabilities:outlet_detail' outlet.slug %}" class="px-4 py-2 text-sm rounded border border-stone-300 hover:bg-stone-100">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

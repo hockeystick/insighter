@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Outlets — Insighter{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-6">
+  <h1 class="text-2xl font-semibold">Outlets</h1>
+  <a href="/admin/capabilities/outlet/add/" class="text-sm text-stone-600 hover:text-stone-900">+ add outlet</a>
+</div>
+
+{% if outlets %}
+<table class="w-full bg-white rounded border">
+  <thead class="bg-stone-100 text-left text-sm text-stone-600">
+    <tr>
+      <th class="px-4 py-2">Name</th>
+      <th class="px-4 py-2">Cohort</th>
+      <th class="px-4 py-2">Data champion</th>
+      <th class="px-4 py-2">Enrolled</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for outlet in outlets %}
+    <tr class="border-t">
+      <td class="px-4 py-2">
+        <a href="{% url 'capabilities:outlet_detail' outlet.slug %}" class="text-stone-900 font-medium hover:underline">{{ outlet.name }}</a>
+      </td>
+      <td class="px-4 py-2 text-sm text-stone-600">{{ outlet.cohort|default:"—" }}</td>
+      <td class="px-4 py-2 text-sm">
+        {% if outlet.data_champion %}
+          <span class="inline-block px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-xs">{{ outlet.data_champion.username }}</span>
+        {% else %}
+          <span class="text-amber-700 text-xs">unfilled</span>
+        {% endif %}
+      </td>
+      <td class="px-4 py-2 text-sm text-stone-600">{{ outlet.enrolment_date|default:"—" }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="text-stone-600">No outlets yet. <a href="/admin/capabilities/outlet/add/" class="underline">Add one in admin</a>.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Diagnostic {{ diagnostic.date }} — {{ diagnostic.outlet.name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl">
+  <div class="flex items-start justify-between mb-4">
+    <div>
+      <h1 class="text-2xl font-semibold">{{ diagnostic.outlet.name }} — {{ diagnostic.date }}</h1>
+      <p class="text-sm text-stone-600">Conducted by {{ diagnostic.conducted_by.username }} · {{ diagnostic.get_status_display }}</p>
+    </div>
+    <a href="{% url 'capabilities:outlet_detail' diagnostic.outlet.slug %}" class="text-sm text-stone-600 hover:text-stone-900">← back to outlet</a>
+  </div>
+
+  {% if diagnostic.notes_summary %}
+  <section class="mb-6">
+    <h2 class="text-sm font-semibold uppercase tracking-wide text-stone-500 mb-2">Summary</h2>
+    <p class="text-sm bg-white border rounded p-4">{{ diagnostic.notes_summary|linebreaksbr }}</p>
+  </section>
+  {% endif %}
+
+  <section class="mb-6">
+    <h2 class="text-sm font-semibold uppercase tracking-wide text-stone-500 mb-2">Raw notes</h2>
+    <pre class="text-sm bg-white border rounded p-4 whitespace-pre-wrap font-mono">{{ diagnostic.notes_raw }}</pre>
+  </section>
+
+  <section>
+    <div class="flex items-center justify-between mb-2">
+      <h2 class="text-sm font-semibold uppercase tracking-wide text-stone-500">State changes from this diagnostic</h2>
+      <a href="{% url 'capabilities:state_create' diagnostic.outlet.slug %}" class="text-sm text-stone-600 hover:text-stone-900">+ record state change</a>
+    </div>
+    {% if state_changes %}
+    <ul class="space-y-2 text-sm">
+      {% for s in state_changes %}
+      <li class="bg-white border rounded px-3 py-2">
+        <div class="flex justify-between">
+          <span class="font-medium">{{ s.item.cluster.name }} / {{ s.item.name }}</span>
+          <span class="text-xs text-stone-500">{{ s.set_at|date:"Y-m-d H:i" }}</span>
+        </div>
+        <div class="text-xs text-stone-600">→ {{ s.get_level_display }} · {{ s.set_by.username }}</div>
+        {% if s.evidence_excerpt %}
+        <blockquote class="mt-1 text-xs italic text-stone-700 border-l-2 border-stone-200 pl-2">{{ s.evidence_excerpt }}</blockquote>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+      <p class="text-sm text-stone-500">No state changes recorded for this diagnostic yet.</p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}{{ outlet.name }} — Insighter{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-4">
+  <div>
+    <h1 class="text-2xl font-semibold">{{ outlet.name }}</h1>
+    <p class="text-sm text-stone-600">
+      {{ outlet.cohort|default:"no cohort" }}
+      {% if outlet.enrolment_date %} · enrolled {{ outlet.enrolment_date }}{% endif %}
+      {% if outlet.data_champion %}
+        · champion <span class="inline-block px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-xs">{{ outlet.data_champion.username }}</span>
+      {% else %}
+        · <span class="text-amber-700 text-xs">no data champion (bus factor risk)</span>
+      {% endif %}
+    </p>
+  </div>
+  <div class="space-x-2">
+    <a href="{% url 'diagnostics:diagnostic_create' outlet.slug %}" class="px-3 py-2 text-sm rounded bg-stone-900 text-white hover:bg-stone-700">Log diagnostic</a>
+    <a href="{% url 'capabilities:state_create' outlet.slug %}" class="px-3 py-2 text-sm rounded border border-stone-300 hover:bg-stone-100">Record state change</a>
+  </div>
+</div>
+
+<section class="mt-6">
+  <h2 class="text-sm font-semibold uppercase tracking-wide text-stone-500 mb-3">Capability state</h2>
+  <div class="space-y-6">
+    {% for block in grid %}
+    <div class="bg-white rounded border">
+      <div class="px-4 py-2 bg-stone-100 border-b text-sm font-medium">{{ block.cluster.name }}</div>
+      <table class="w-full text-sm">
+        <tbody>
+          {% for row in block.rows %}
+          <tr class="border-t">
+            <td class="px-4 py-2 w-1/2">{{ row.item.name }}</td>
+            <td class="px-4 py-2 w-1/4">
+              {% if row.state %}
+                <span class="inline-block px-2 py-0.5 rounded text-xs
+                  {% if row.state.level == 0 %}bg-stone-100 text-stone-500
+                  {% elif row.state.level == 1 %}bg-amber-100 text-amber-800
+                  {% elif row.state.level == 2 %}bg-sky-100 text-sky-800
+                  {% elif row.state.level == 3 %}bg-indigo-100 text-indigo-800
+                  {% else %}bg-emerald-100 text-emerald-800{% endif %}">
+                  {{ row.state.get_level_display }}
+                </span>
+              {% else %}
+                <span class="text-stone-400 text-xs">no signal</span>
+              {% endif %}
+            </td>
+            <td class="px-4 py-2 w-1/4 text-xs text-stone-500">
+              {% if row.state %}
+                {{ row.state.set_at|date:"Y-m-d" }} · {{ row.state.set_by.username }}
+              {% endif %}
+              <a href="{% url 'capabilities:state_create' outlet.slug %}?item={{ row.item.id }}" class="ml-2 text-stone-400 hover:text-stone-700">edit</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="mt-10 grid md:grid-cols-2 gap-6">
+  <div>
+    <h2 class="text-sm font-semibold uppercase tracking-wide text-stone-500 mb-3">Recent state changes</h2>
+    {% if history %}
+    <ul class="space-y-2 text-sm">
+      {% for s in history %}
+      <li class="bg-white border rounded px-3 py-2">
+        <div class="flex justify-between">
+          <span class="font-medium">{{ s.item.cluster.name }} / {{ s.item.name }}</span>
+          <span class="text-xs text-stone-500">{{ s.set_at|date:"Y-m-d H:i" }}</span>
+        </div>
+        <div class="text-xs text-stone-600">→ {{ s.get_level_display }} · set by {{ s.set_by.username }}</div>
+        {% if s.evidence_excerpt %}
+        <blockquote class="mt-1 text-xs italic text-stone-700 border-l-2 border-stone-200 pl-2">{{ s.evidence_excerpt }}</blockquote>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+      <p class="text-sm text-stone-500">No state history yet.</p>
+    {% endif %}
+  </div>
+  <div>
+    <h2 class="text-sm font-semibold uppercase tracking-wide text-stone-500 mb-3">Diagnostics</h2>
+    {% if diagnostics %}
+    <ul class="space-y-2 text-sm">
+      {% for d in diagnostics %}
+      <li class="bg-white border rounded px-3 py-2">
+        <div class="flex justify-between">
+          <span class="font-medium">{{ d.date }}</span>
+          <span class="text-xs text-stone-500">{{ d.get_status_display }}</span>
+        </div>
+        <div class="text-xs text-stone-600">conducted by {{ d.conducted_by.username }}</div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+      <p class="text-sm text-stone-500">No diagnostics logged.</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

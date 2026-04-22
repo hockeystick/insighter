@@ -1,0 +1,26 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Insighter{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-stone-50 text-stone-900 font-sans">
+  <header class="border-b bg-white">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="{% url 'capabilities:outlet_list' %}" class="text-lg font-semibold">Insighter</a>
+      <nav class="text-sm text-stone-600 space-x-4">
+        <a href="{% url 'capabilities:outlet_list' %}" class="hover:text-stone-900">Outlets</a>
+        <a href="/admin/" class="hover:text-stone-900">Admin</a>
+        {% if user.is_authenticated %}
+          <span class="text-stone-400">{{ user.username }}</span>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+  <main class="max-w-6xl mx-auto px-6 py-8">
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>
