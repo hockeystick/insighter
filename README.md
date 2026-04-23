@@ -65,6 +65,8 @@ python3 -m venv .venv
 .venv/bin/python manage.py migrate
 .venv/bin/python manage.py createsuperuser
 .venv/bin/python manage.py loaddata taxonomy_seed
+.venv/bin/python manage.py seed_demo_refs        # sponsors + specialists + tags
+export ANTHROPIC_API_KEY=sk-ant-...              # for synthesis + mismatch
 .venv/bin/python manage.py runserver
 ```
 
@@ -73,10 +75,14 @@ Then:
 - `http://127.0.0.1:8000/admin/` — add an Outlet (and log in)
 - `http://127.0.0.1:8000/` — outlet list → detail view
 
+One-command Docker path is in [DEPLOY.md](DEPLOY.md). The 3-min
+demo script is in [DEMO.md](DEMO.md).
+
 Tests:
 ```bash
 .venv/bin/python manage.py test
 ```
+Tests never hit the Anthropic API — the synthesis flow is fully mocked.
 
 ## Rebuilding the taxonomy from source
 

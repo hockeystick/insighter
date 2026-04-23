@@ -1,72 +1,98 @@
-# Insighter — status
+# Insighter — demo-ready status
 
-## This session
+## Submission checklist
 
-| Commit    | What                                                     |
-|-----------|----------------------------------------------------------|
-| `942a337` | Split level scale (depth vs bus-factor)                  |
-| `6bb941f` | Add MIT LICENSE                                          |
-| `52aca24` | Update STATUS + DECISIONS mid-session                    |
-| `84f523c` | Rebuild taxonomy fixture from L3 tasks                   |
-| *this*    | Close out DECISIONS after #7 resolved                    |
+- [x] Capability state tracker (real)
+- [x] Depth / bus-factor split on state (`level` + `led_by_champion`)
+- [x] Append-only state history with required evidence excerpts
+- [x] Diagnostic-note synthesis via Claude Opus 4.7 (tool-use, not chat)
+- [x] Prompt caching on the ~7.7K-token taxonomy block
+- [x] Review-diff UI: accept / edit / reject per proposal
+- [x] Intent-vs-evidence mismatch flagger (Opus 4.7), cached on outlet
+- [x] "Why is this outlet stuck" composed view
+- [x] Sponsor matcher ranking outlets + specialists by SharedTag overlap
+- [x] Deployment + check-in stub list views with empty states
+- [x] Read-only taxonomy browser (public — not `/admin/`)
+- [x] Django admin for non-coder taxonomy maintenance
+- [x] MIT LICENSE
+- [x] README, DEPLOY.md, DEMO.md
+- [x] Dockerfile + docker-compose.yml (one-command self-host)
+- [x] 24 tests passing (synthesis flow fully mocked; no network)
+- [x] Pushed to `origin/main` on `hockeystick/insighter`
+- [ ] Seed outlet content (yours — `fixtures/demo_outlets.example.json` is the template)
+- [ ] Record the 3-min demo video (DEMO.md)
+- [ ] Final submission form with repo URL + video link
 
-## Current state
+## Git state
 
-- **Data model**: unchanged since the earlier schema. `CapabilityState`
-  now has `led_by_champion: bool` distinct from `level` (depth).
-- **Taxonomy**: 12 clusters × 90 items loaded from the desk xlsx, with
-  full metadata per item. L2 subcluster is encoded in `description`.
-- **Tests**: 9 passing.
-- **Git**: `main` is 5 commits ahead of `origin/main`. Clean history —
-  no xlsx blobs in any commit.
-
-## How to reload taxonomy from scratch
-
-```bash
-# xlsx must be present at the project root, gitignored
-.venv/bin/python scripts/build_taxonomy_fixture.py
-.venv/bin/python manage.py shell -c "
-from capabilities.models import Cluster, CapabilityItem, CapabilityState
-CapabilityState.objects.all().delete()
-CapabilityItem.objects.all().delete()
-Cluster.objects.all().delete()
-"
-.venv/bin/python manage.py loaddata taxonomy_seed
+```
+caa45dc  Add Docker Compose self-host, 3-min demo script, and outlet seed template
+91d3f30  Sponsor matcher, deployment + check-in stubs, seeded reference data
+fb7d7b8  Build mismatch flagger + 'why is this outlet stuck' composed view
+27cef68  Build diagnostic-note synthesis on Claude Opus 4.7 (tool-use + caching)
+a15d6e7  Add README
+57bec2c  Group grid by L2 subcluster and add read-only taxonomy browser
+84f523c  Rebuild taxonomy fixture from L3 tasks in the xlsx
+6bb941f  Add MIT LICENSE
+942a337  Split level scale: separate depth from bus-factor
 ```
 
-## Decisions resolved this session
+All pushed to origin. `main` = HEAD.
 
-- #1 level scale → split
-- #2 license → MIT
-- #3 taxonomy metadata → backfilled from xlsx (part of #7)
-- #7 taxonomy granularity → option (a), L3 tasks are items
+## What's live in the app
 
-## Decisions still pending
+| Path | What |
+|---|---|
+| `/` | Outlet list |
+| `/outlet/<slug>/` | Outlet detail — capability grid grouped by cluster × subcluster, 90 items |
+| `/outlet/<slug>/state/new/` | Manual state-change entry |
+| `/outlet/<slug>/why-stuck/` | Composed impact-anchor view + mismatch flag |
+| `/outlet/<slug>/mismatch/run/` | POST — runs the LLM mismatch flagger |
+| `/diagnostics/outlet/<slug>/new/` | Log a diagnostic |
+| `/diagnostics/<pk>/` | Diagnostic detail — Run Synthesis button lives here |
+| `/diagnostics/<pk>/synthesis/run/` | POST — runs Claude Opus 4.7 synthesis |
+| `/diagnostics/<pk>/synthesis/review/` | Review-diff UI (accept / edit / reject) |
+| `/diagnostics/<pk>/synthesis/accept/` | POST — appends CapabilityState rows |
+| `/match/` | Sponsor index (seeded with 4 sponsors) |
+| `/match/sponsor/<pk>/` | Per-sponsor outlet + specialist ranking by tag overlap |
+| `/deployments/` | Deployment stub list |
+| `/checkins/` | Check-in stub list |
+| `/taxonomy/` | Public read-only taxonomy browser |
+| `/admin/` | Django admin — taxonomy + outlet maintenance |
 
-- #4 mismatch flagger prompt (Friday)
-- #5 seed outlet voices + diagnostic notes (you)
-- #6 demo UX polish (Saturday)
+## Claude Opus 4.7 integration surface
 
-## Pending work
+- Model `claude-opus-4-7`, adaptive thinking, effort `xhigh`, max_tokens 8192
+- **Synthesis** (`insighter/llm/synthesis.py`): tool-use with
+  `propose_state_changes`, schema enforces verbatim evidence excerpts,
+  confidence 1–5, level enum. System prompt's verbatim-only rule means
+  hallucinated evidence is structurally blocked.
+- **Mismatch** (`insighter/llm/mismatch.py`): tool-use with
+  `report_mismatches`, returns {headline, flags[{title, narrative,
+  severity}], bus_factor_risk}.
+- Prompt-cached taxonomy block (~7.7K tokens, > 4096 Opus 4.7 cache floor)
+  + per-outlet state block. Both calls reuse the taxonomy cache within the
+  5-minute TTL.
+- Usage (cache-read, cache-write, model ID) surfaced inline on the review
+  page and why-stuck page so judges can see the caching working during
+  the demo.
 
-- **Friday**: Anthropic SDK wrapper + prompt caching, synthesis
-  tool-use endpoint, mismatch flagger endpoint, diff UI for
-  reviewing proposed state changes.
-- **Saturday**: "why is this outlet stuck" composed view, sponsor
-  matcher filtered table, stub screens for Specialist deployment +
-  CheckIn with seed data, read-only taxonomy browser (not admin),
-  first demo video cut.
-- **Sunday**: README + deploy doc, written summary, final demo
-  video re-record, buffer.
+## To record the demo
 
-## What I did not touch
+1. Write your three seed outlets by editing
+   `fixtures/demo_outlets.example.json` → rename to
+   `fixtures/demo_outlets.json` → `loaddata demo_outlets`.
+2. Log a diagnostic for each outlet via the UI or admin, with realistic
+   raw notes in your voice.
+3. Pre-run the mismatch flagger on your hero outlet so the why-stuck
+   page renders cached.
+4. Follow `DEMO.md` beat-by-beat. Dry-run twice with a timer.
 
-- No LLM integration.
-- No seed outlet / diagnostic content.
-- No demo UX polish.
-- No schema changes beyond the `0003_capabilitystate_led_by_champion` migration.
+## Known limitations (v0.1 → v0.2)
 
-## Time budget
-
-~45 min wall-clock this session. 5 commits landed. Hard stop cap hit
-cleanly at the end of the L3-fixture work, as intended.
+- Staff-only auth; no per-outlet permissions, 2FA, or audit log beyond
+  the append-only `CapabilityState` table.
+- `DEBUG=1` in both native and Compose configs; not production-safe.
+- Deployment and CheckIn screens are stubs — schema wired, UX for
+  scheduling and response capture is v0.2 scope.
+- Fast Mode / alternate models not plumbed; demo locks to Opus 4.7.
