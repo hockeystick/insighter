@@ -107,6 +107,14 @@ class CapabilityItem(models.Model):
     def __str__(self):
         return f"{self.cluster.name} / {self.name}"
 
+    @property
+    def subcluster(self) -> str:
+        """L2 subcluster, parsed from the description prefix set by the ingest script."""
+        for line in self.description.splitlines():
+            if line.startswith("Subcluster:"):
+                return line.split(":", 1)[1].strip()
+        return ""
+
 
 class Outlet(models.Model):
     """A newsroom enrolled in the programme."""

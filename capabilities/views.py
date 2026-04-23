@@ -20,18 +20,36 @@ def _current_state_map(outlet):
     return latest
 
 
+def _build_grid(clusters, current_state_by_item_id=None):
+    """Group clusters → subclusters → items so the grid stays scannable at 90 items.
+
+    Returns: [{cluster, subgroups: [{subcluster_name, rows: [{item, state?}]}]}]
+    """
+    grid = []
+    for cluster in clusters:
+        subgroups = []
+        current_sub = None
+        current_rows = None
+        for item in cluster.items.order_by("order", "name"):
+            sub = item.subcluster or "—"
+            if sub != current_sub:
+                current_rows = []
+                subgroups.append({"subcluster": sub, "rows": current_rows})
+                current_sub = sub
+            row = {"item": item}
+            if current_state_by_item_id is not None:
+                row["state"] = current_state_by_item_id.get(item.id)
+            current_rows.append(row)
+        grid.append({"cluster": cluster, "subgroups": subgroups})
+    return grid
+
+
 @login_required
 def outlet_detail(request, slug):
     outlet = get_object_or_404(Outlet, slug=slug)
     clusters = Cluster.objects.prefetch_related("items").order_by("order")
     current = _current_state_map(outlet)
-
-    grid = []
-    for cluster in clusters:
-        rows = []
-        for item in cluster.items.order_by("order", "name"):
-            rows.append({"item": item, "state": current.get(item.id)})
-        grid.append({"cluster": cluster, "rows": rows})
+    grid = _build_grid(clusters, current)
 
     history = (
         outlet.states
@@ -75,4 +93,17 @@ def capability_state_create(request, slug):
         request,
         "capabilities/state_form.html",
         {"outlet": outlet, "form": form},
+    )
+
+
+def taxonomy_browser(request):
+    """Read-only taxonomy view. Intentionally public (no login) so demos can show
+    the desk's working model without logging in. Shows no outlet or state data."""
+    clusters = Cluster.objects.prefetch_related("items").order_by("order")
+    grid = _build_grid(clusters)
+    total_items = sum(c.items.count() for c in clusters)
+    return render(
+        request,
+        "capabilities/taxonomy_browser.html",
+        {"grid": grid, "cluster_count": len(grid), "item_count": total_items},
     )

@@ -131,3 +131,34 @@ class ViewSmokeTests(TestCase):
         resp = self.client.get(reverse("capabilities:outlet_list"))
         self.assertEqual(resp.status_code, 302)
         self.assertIn("/admin/login/", resp.url)
+
+
+class TaxonomyBrowserTests(TestCase):
+    """Public read-only taxonomy view + subcluster parsing."""
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.cluster = Cluster.objects.create(name="Service design", order=1)
+        cls.with_sub = CapabilityItem.objects.create(
+            cluster=cls.cluster,
+            name="Map current touchpoints",
+            description="Subcluster: Service blueprint\nNotes: foundation",
+            order=1,
+        )
+        cls.no_sub = CapabilityItem.objects.create(
+            cluster=cls.cluster,
+            name="Ungrouped item",
+            description="",
+            order=2,
+        )
+
+    def test_subcluster_property_parses_prefix(self):
+        self.assertEqual(self.with_sub.subcluster, "Service blueprint")
+        self.assertEqual(self.no_sub.subcluster, "")
+
+    def test_taxonomy_browser_is_public(self):
+        resp = self.client.get(reverse("capabilities:taxonomy_browser"))
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, "Service design")
+        self.assertContains(resp, "Service blueprint")
+        self.assertContains(resp, "Map current touchpoints")

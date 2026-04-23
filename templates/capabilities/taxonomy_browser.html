@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Taxonomy — Insighter{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-2">
+  <h1 class="text-2xl font-semibold">Audience development taxonomy</h1>
+  <span class="text-xs text-stone-500">{{ cluster_count }} clusters · {{ item_count }} capabilities</span>
+</div>
+<p class="text-sm text-stone-600 mb-6">
+  The desk's working taxonomy. This is the vocabulary every diagnostic,
+  state change, and handover check-in is anchored against. Maintainers
+  edit it in <a href="/admin/capabilities/cluster/" class="underline">admin</a>.
+</p>
+
+<div class="space-y-6">
+  {% for block in grid %}
+  <section class="bg-white rounded border">
+    <header class="px-4 py-2 bg-stone-100 border-b flex items-center justify-between">
+      <h2 class="text-sm font-medium">{{ forloop.counter }}. {{ block.cluster.name }}</h2>
+      <span class="text-xs text-stone-500">{{ block.cluster.items.count }} capabilities</span>
+    </header>
+    {% for group in block.subgroups %}
+      <div class="border-t">
+        {% if group.subcluster and group.subcluster != "—" %}
+          <div class="px-4 py-1 text-xs uppercase tracking-wide text-stone-500 bg-stone-50">{{ group.subcluster }}</div>
+        {% endif %}
+        <ul class="divide-y">
+          {% for row in group.rows %}
+          <li class="px-4 py-2 flex items-start justify-between gap-4">
+            <div class="flex-1">
+              <div class="text-sm text-stone-900">{{ row.item.name }}</div>
+              {% if row.item.cross_desk_dep %}
+                <div class="text-xs text-stone-500 mt-0.5">gated by {{ row.item.cross_desk_dep }}</div>
+              {% endif %}
+            </div>
+            <div class="flex items-center gap-1 text-xs">
+              <span class="px-1.5 py-0.5 rounded
+                {% if row.item.priority == 'H' %}bg-red-100 text-red-800
+                {% elif row.item.priority == 'M' %}bg-stone-100 text-stone-700
+                {% else %}bg-stone-50 text-stone-500{% endif %}">
+                {{ row.item.get_priority_display }}
+              </span>
+              {% if row.item.baseline %}
+                <span class="px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-800">baseline</span>
+              {% endif %}
+              {% if row.item.template_able %}
+                <span class="px-1.5 py-0.5 rounded bg-sky-100 text-sky-800">template-able</span>
+              {% endif %}
+              <span class="px-1.5 py-0.5 rounded
+                {% if row.item.phase == 'activation' %}bg-amber-100 text-amber-800
+                {% elif row.item.phase == 'resources' %}bg-emerald-100 text-emerald-800
+                {% else %}bg-stone-100 text-stone-600{% endif %}">
+                {{ row.item.get_phase_display }}
+              </span>
+              <span class="px-1.5 py-0.5 rounded bg-stone-100 text-stone-600">{{ row.item.get_assessment_method_display }}</span>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endfor %}
+  </section>
+  {% endfor %}
+</div>
+{% endblock %}
