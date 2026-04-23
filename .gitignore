@@ -7,3 +7,6 @@ __pycache__/
 *.egg-info/
 staticfiles/
 media/
+# Desk IP — never commit
+*.xlsx
+Plus-Hub-Service Layer Tasklists *

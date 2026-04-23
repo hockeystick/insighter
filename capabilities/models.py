@@ -142,27 +142,30 @@ class CapabilityState(models.Model):
     Current state for (outlet, item) is the most recent row by set_at.
     No row is ever mutated or deleted in normal flow.
 
-    NOTE: the `level` field currently conflates depth of practice (1-3) with
-    bus-factor-at-capability (4). DECISIONS.md #1 has options to split this
-    into separate fields before Friday.
+    `level` captures depth of practice. `led_by_champion` captures bus-factor
+    at the capability (is an outlet-side data champion sustaining it?). The
+    two were initially fused into a single enum; separating them keeps the
+    Bus-Factor KPI legible without overloading the depth scale.
     """
 
     LEVEL_UNKNOWN = 0
     LEVEL_AWARE = 1
     LEVEL_PRACTISING = 2
     LEVEL_EMBEDDED = 3
-    LEVEL_CHAMPION_LED = 4
     LEVEL_CHOICES = [
         (LEVEL_UNKNOWN, "Unknown"),
         (LEVEL_AWARE, "Aware"),
         (LEVEL_PRACTISING, "Practising"),
         (LEVEL_EMBEDDED, "Embedded"),
-        (LEVEL_CHAMPION_LED, "Data-champion-led"),
     ]
 
     outlet = models.ForeignKey(Outlet, on_delete=models.CASCADE, related_name="states")
     item = models.ForeignKey(CapabilityItem, on_delete=models.CASCADE, related_name="states")
     level = models.PositiveSmallIntegerField(choices=LEVEL_CHOICES, default=LEVEL_UNKNOWN)
+    led_by_champion = models.BooleanField(
+        default=False,
+        help_text="This capability is currently sustained by an outlet-side data champion (Bus Factor).",
+    )
     evidence_excerpt = models.TextField(
         help_text="Quoted evidence from the diagnostic — required, no empty rows.",
     )

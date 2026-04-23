@@ -55,8 +55,8 @@ class OutletAdmin(admin.ModelAdmin):
 
 @admin.register(CapabilityState)
 class CapabilityStateAdmin(admin.ModelAdmin):
-    list_display = ("set_at", "outlet", "item", "level", "set_by", "llm_proposed")
-    list_filter = ("level", "llm_proposed", "item__cluster")
+    list_display = ("set_at", "outlet", "item", "level", "led_by_champion", "set_by", "llm_proposed")
+    list_filter = ("level", "led_by_champion", "llm_proposed", "item__cluster")
     search_fields = ("outlet__name", "item__name", "evidence_excerpt")
     readonly_fields = ("set_at",)
     date_hierarchy = "set_at"

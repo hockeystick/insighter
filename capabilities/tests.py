@@ -49,6 +49,18 @@ class AppendOnlyStateTests(TestCase):
         rows = CapabilityState.objects.filter(outlet=self.outlet, item=self.item)
         self.assertEqual(rows.count(), 3)
 
+    def test_champion_flag_independent_of_level(self):
+        state = CapabilityState.objects.create(
+            outlet=self.outlet,
+            item=self.item,
+            level=CapabilityState.LEVEL_PRACTISING,
+            evidence_excerpt="data champion running weekly reviews",
+            led_by_champion=True,
+            set_by=self.user,
+        )
+        self.assertTrue(state.led_by_champion)
+        self.assertEqual(state.level, CapabilityState.LEVEL_PRACTISING)
+
     def test_evidence_excerpt_required(self):
         from django.core.exceptions import ValidationError
         state = CapabilityState(

@@ -39,10 +39,12 @@
                   {% if row.state.level == 0 %}bg-stone-100 text-stone-500
                   {% elif row.state.level == 1 %}bg-amber-100 text-amber-800
                   {% elif row.state.level == 2 %}bg-sky-100 text-sky-800
-                  {% elif row.state.level == 3 %}bg-indigo-100 text-indigo-800
-                  {% else %}bg-emerald-100 text-emerald-800{% endif %}">
+                  {% else %}bg-indigo-100 text-indigo-800{% endif %}">
                   {{ row.state.get_level_display }}
                 </span>
+                {% if row.state.led_by_champion %}
+                  <span class="inline-block ml-1 px-2 py-0.5 rounded text-xs bg-emerald-100 text-emerald-800" title="Sustained by outlet-side data champion">champion</span>
+                {% endif %}
               {% else %}
                 <span class="text-stone-400 text-xs">no signal</span>
               {% endif %}
