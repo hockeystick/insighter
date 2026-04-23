@@ -133,6 +133,58 @@ class ViewSmokeTests(TestCase):
         self.assertIn("/admin/login/", resp.url)
 
 
+class WhyStuckTests(TestCase):
+    """Composed 'why is this outlet stuck' view."""
+
+    @classmethod
+    def setUpTestData(cls):
+        User = get_user_model()
+        cls.user = User.objects.create_user(username="staff2", password="x")
+        cls.outlet = Outlet.objects.create(name="La Voz", slug="la-voz", cohort="Wave 2")
+        cluster = Cluster.objects.create(name="Retention", order=5)
+        cls.item = CapabilityItem.objects.create(cluster=cluster, name="Churn prevention", order=4)
+
+    def setUp(self):
+        self.client.login(username="staff2", password="x")
+
+    def test_renders_without_mismatch_cache(self):
+        resp = self.client.get(reverse("capabilities:why_stuck", args=[self.outlet.slug]))
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, "Why is this outlet stuck")
+        self.assertContains(resp, "Retention")
+        self.assertContains(resp, "No mismatch check run yet")
+
+    def test_renders_cached_mismatch(self):
+        from django.utils import timezone
+        self.outlet.mismatch_flag_json = {
+            "headline": "Outlet says retention, does acquisition.",
+            "flags": [
+                {
+                    "title": "Priority/evidence drift",
+                    "narrative": "Stated retention focus but 4 of last 5 state changes are in acquisition.",
+                    "severity": "high",
+                }
+            ],
+            "bus_factor_risk": "Data champion unfilled; all state changes set by programme staff.",
+            "model": "claude-opus-4-7",
+            "usage": {"cache_read_input_tokens": 5000},
+        }
+        self.outlet.mismatch_flag_computed_at = timezone.now()
+        self.outlet.save()
+
+        resp = self.client.get(reverse("capabilities:why_stuck", args=[self.outlet.slug]))
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, "Priority/evidence drift")
+        self.assertContains(resp, "Data champion unfilled")
+        self.assertContains(resp, "claude-opus-4-7")
+
+    def test_mismatch_run_blocked_without_api_key(self):
+        import os
+        os.environ.pop("ANTHROPIC_API_KEY", None)
+        resp = self.client.post(reverse("capabilities:mismatch_run", args=[self.outlet.slug]))
+        self.assertEqual(resp.status_code, 503)
+
+
 class TaxonomyBrowserTests(TestCase):
     """Public read-only taxonomy view + subcluster parsing."""
 

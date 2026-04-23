@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+
+{% block title %}Why is {{ outlet.name }} stuck — Insighter{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl">
+  <div class="flex items-start justify-between mb-4">
+    <div>
+      <h1 class="text-2xl font-semibold">Why is this outlet stuck?</h1>
+      <p class="text-sm text-stone-600">{{ outlet.name }} · {{ outlet.cohort|default:"no cohort" }}</p>
+    </div>
+    <a href="{% url 'capabilities:outlet_detail' outlet.slug %}" class="text-sm text-stone-600 hover:text-stone-900">← back to outlet</a>
+  </div>
+
+  {# ---- Mismatch flag (THE Opus 4.7 beat) ---- #}
+  <section class="mb-8">
+    <div class="flex items-center justify-between mb-2">
+      <h2 class="text-sm font-semibold uppercase tracking-wide text-stone-500">Intent-vs-evidence check</h2>
+      <form method="post" action="{% url 'capabilities:mismatch_run' outlet.slug %}">
+        {% csrf_token %}
+        <button type="submit" class="text-xs px-2 py-1 rounded bg-indigo-600 text-white hover:bg-indigo-500 disabled:bg-stone-300 disabled:cursor-not-allowed" {% if not has_api_key %}disabled title="ANTHROPIC_API_KEY not set"{% endif %}>
+          {% if mismatch %}Re-run{% else %}Run mismatch flagger{% endif %}
+        </button>
+      </form>
+    </div>
+    {% if mismatch %}
+    <div class="bg-white border rounded p-5">
+      <p class="text-lg font-medium text-stone-900">{{ mismatch.headline }}</p>
+      {% if mismatch.flags %}
+        <ul class="mt-4 space-y-3">
+          {% for flag in mismatch.flags %}
+          <li class="border-l-4 pl-3
+            {% if flag.severity == 'high' %}border-red-500
+            {% elif flag.severity == 'medium' %}border-amber-500
+            {% else %}border-stone-300{% endif %}">
+            <div class="text-sm font-medium">{{ flag.title }}
+              <span class="text-xs text-stone-500">· {{ flag.severity }}</span>
+            </div>
+            <p class="text-sm text-stone-700 mt-0.5">{{ flag.narrative }}</p>
+          </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="mt-2 text-sm text-stone-600">No specific mismatches flagged.</p>
+      {% endif %}
+      {% if mismatch.bus_factor_risk %}
+        <div class="mt-4 pt-4 border-t">
+          <div class="text-xs uppercase tracking-wide text-stone-500 mb-1">Bus-factor read</div>
+          <p class="text-sm text-stone-700">{{ mismatch.bus_factor_risk }}</p>
+        </div>
+      {% endif %}
+      {% if mismatch_computed_at %}
+        <div class="mt-3 text-xs text-stone-400">
+          computed {{ mismatch_computed_at|timesince }} ago ·
+          {{ mismatch.usage.cache_read_input_tokens|default:0 }} tok read from cache ·
+          model {{ mismatch.model }}
+        </div>
+      {% endif %}
+    </div>
+    {% else %}
+    <div class="bg-white border rounded p-5 text-sm text-stone-600">
+      No mismatch check run yet for this outlet.
+      {% if not has_api_key %}
+        <span class="text-amber-700">Set ANTHROPIC_API_KEY to enable this.</span>
+      {% else %}
+        Click <em>Run mismatch flagger</em> to have Claude compare stated priorities against the evidence trail.
+      {% endif %}
+    </div>
+    {% endif %}
+  </section>
+
+  <div class="grid md:grid-cols-2 gap-6">
+    {# ---- Bus-factor indicator ---- #}
+    <section>
+      <h2 class="text-sm font-semibold uppercase tracking-wide text-stone-500 mb-2">Bus factor</h2>
+      <div class="bg-white border rounded p-4 text-sm space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="text-stone-600">Data champion</span>
+          {% if bus_factor.has_data_champion %}
+            <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-xs">{{ outlet.data_champion.username }}</span>
+          {% else %}
+            <span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800 text-xs">unfilled</span>
+          {% endif %}
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-stone-600">Capabilities led by champion</span>
+          <span class="font-medium">{{ bus_factor.champion_count }}</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-stone-600">Capabilities at Embedded</span>
+          <span class="font-medium">{{ bus_factor.embedded_count }}</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-stone-600">Capabilities with any recorded state</span>
+          <span class="font-medium">{{ bus_factor.recorded_items }}</span>
+        </div>
+        {% if bus_factor.last_change_at %}
+        <div class="flex items-center justify-between">
+          <span class="text-stone-600">Last state change</span>
+          <span class="text-xs text-stone-500">{{ bus_factor.last_change_at|timesince }} ago</span>
+        </div>
+        {% endif %}
+      </div>
+    </section>
+
+    {# ---- Cluster rollup ---- #}
+    <section>
+      <h2 class="text-sm font-semibold uppercase tracking-wide text-stone-500 mb-2">State by cluster</h2>
+      <div class="bg-white border rounded text-sm">
+        <table class="w-full">
+          <thead class="text-xs text-stone-500">
+            <tr>
+              <th class="px-3 py-2 text-left">Cluster</th>
+              <th class="px-2 py-2 text-right">Embedded</th>
+              <th class="px-2 py-2 text-right">Practising</th>
+              <th class="px-2 py-2 text-right">Aware</th>
+              <th class="px-2 py-2 text-right">Unknown</th>
+              <th class="px-2 py-2 text-right">—</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in cluster_rollups %}
+            <tr class="border-t">
+              <td class="px-3 py-1.5 text-stone-800">{{ row.cluster.name }}</td>
+              <td class="px-2 py-1.5 text-right {% if row.counts.Embedded %}font-medium text-indigo-700{% else %}text-stone-400{% endif %}">{{ row.counts.Embedded }}</td>
+              <td class="px-2 py-1.5 text-right {% if row.counts.Practising %}text-sky-700{% else %}text-stone-400{% endif %}">{{ row.counts.Practising }}</td>
+              <td class="px-2 py-1.5 text-right {% if row.counts.Aware %}text-amber-700{% else %}text-stone-400{% endif %}">{{ row.counts.Aware }}</td>
+              <td class="px-2 py-1.5 text-right text-stone-500">{{ row.counts.Unknown }}</td>
+              <td class="px-2 py-1.5 text-right text-stone-400">{{ row.no_signal }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  {# ---- Recent trajectory ---- #}
+  <section class="mt-6">
+    <h2 class="text-sm font-semibold uppercase tracking-wide text-stone-500 mb-2">Recent trajectory</h2>
+    <div class="grid md:grid-cols-2 gap-6">
+      <div>
+        <div class="text-xs text-stone-500 mb-1">State changes (last 10)</div>
+        {% if recent_history %}
+        <ul class="space-y-2 text-sm">
+          {% for s in recent_history %}
+          <li class="bg-white border rounded px-3 py-2">
+            <div class="flex justify-between">
+              <span class="font-medium">{{ s.item.cluster.name }} / {{ s.item.name }}</span>
+              <span class="text-xs text-stone-500">{{ s.set_at|date:"Y-m-d" }}</span>
+            </div>
+            <div class="text-xs text-stone-600">→ {{ s.get_level_display }}{% if s.led_by_champion %} · champion{% endif %} · {{ s.set_by.username }}</div>
+            {% if s.evidence_excerpt %}
+            <blockquote class="mt-1 text-xs italic text-stone-700 border-l-2 border-stone-200 pl-2">{{ s.evidence_excerpt }}</blockquote>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+          <p class="text-sm text-stone-500">No state history yet.</p>
+        {% endif %}
+      </div>
+      <div>
+        <div class="text-xs text-stone-500 mb-1">Recent diagnostics</div>
+        {% if diagnostics %}
+        <ul class="space-y-2 text-sm">
+          {% for d in diagnostics %}
+          <li class="bg-white border rounded px-3 py-2">
+            <div class="flex justify-between">
+              <span class="font-medium"><a href="{% url 'diagnostics:diagnostic_detail' d.pk %}" class="hover:underline">{{ d.date }}</a></span>
+              <span class="text-xs text-stone-500">{{ d.get_status_display }}</span>
+            </div>
+            <div class="text-xs text-stone-600">conducted by {{ d.conducted_by.username }}</div>
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+          <p class="text-sm text-stone-500">No diagnostics logged.</p>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}

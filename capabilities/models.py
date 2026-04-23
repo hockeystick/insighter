@@ -137,6 +137,13 @@ class Outlet(models.Model):
 
     tags = models.ManyToManyField(SharedTag, blank=True, related_name="outlets")
 
+    mismatch_flag_json = models.JSONField(
+        null=True,
+        blank=True,
+        help_text="Cached output of the LLM mismatch flagger: headline, flags, bus_factor_risk.",
+    )
+    mismatch_flag_computed_at = models.DateTimeField(null=True, blank=True)
+
     class Meta:
         ordering = ["name"]
 

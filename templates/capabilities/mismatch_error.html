@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Mismatch flagger failed — {{ outlet.name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl">
+  <h1 class="text-2xl font-semibold mb-2">Mismatch flagger failed</h1>
+  <p class="text-sm text-stone-600 mb-4">{{ outlet.name }}</p>
+  <pre class="bg-white border rounded p-4 text-sm text-red-800 whitespace-pre-wrap">{{ error }}</pre>
+  <div class="mt-4">
+    <a href="{% url 'capabilities:why_stuck' outlet.slug %}" class="text-sm text-stone-600 hover:text-stone-900">← back</a>
+  </div>
+</div>
+{% endblock %}
