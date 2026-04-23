@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}{{ sponsor.name }} — sponsor match{% endblock %}
+
+{% block content %}
+<div class="flex items-start justify-between mb-4">
+  <div>
+    <h1 class="text-2xl font-semibold">{{ sponsor.name }}</h1>
+    {% if sponsor.funding_notes %}<p class="text-sm text-stone-600">{{ sponsor.funding_notes }}</p>{% endif %}
+  </div>
+  <a href="{% url 'capabilities:sponsor_match_index' %}" class="text-sm text-stone-600 hover:text-stone-900">← all sponsors</a>
+</div>
+
+<section class="mb-6">
+  <h2 class="text-sm font-semibold uppercase tracking-wide text-stone-500 mb-2">Funding dimensions</h2>
+  <div class="bg-white border rounded p-4">
+    {% if sponsor_tags_by_dim %}
+      <dl class="grid md:grid-cols-4 gap-4 text-sm">
+        {% for dim, tags in sponsor_tags_by_dim.items %}
+        <div>
+          <dt class="text-xs text-stone-500 uppercase tracking-wide">{{ dim }}</dt>
+          <dd class="mt-1 flex flex-wrap gap-1">
+            {% for tag in tags %}<span class="text-xs px-1.5 py-0.5 rounded bg-stone-100 text-stone-700">{{ tag.value }}</span>{% endfor %}
+          </dd>
+        </div>
+        {% endfor %}
+      </dl>
+    {% else %}
+      <p class="text-sm text-stone-500">No tags set on this sponsor yet.</p>
+    {% endif %}
+  </div>
+</section>
+
+<div class="grid md:grid-cols-2 gap-6">
+  <section>
+    <h2 class="text-sm font-semibold uppercase tracking-wide text-stone-500 mb-2">Matching outlets ({{ outlet_rows|length }})</h2>
+    {% if outlet_rows %}
+    <ul class="space-y-2">
+      {% for row in outlet_rows %}
+      <li class="bg-white border rounded px-3 py-2 text-sm">
+        <div class="flex items-center justify-between">
+          <a href="{% url 'capabilities:outlet_detail' row.outlet.slug %}" class="font-medium hover:underline">{{ row.outlet.name }}</a>
+          <span class="text-xs px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800">{{ row.overlap_count }} match{{ row.overlap_count|pluralize:"es" }}</span>
+        </div>
+        <div class="mt-1 flex flex-wrap gap-1">
+          {% for tag in row.overlap_tags %}<span class="text-xs px-1.5 py-0.5 rounded bg-stone-100 text-stone-700">{{ tag.value }}</span>{% endfor %}
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+      <p class="text-sm text-stone-500">No outlets share any funding dimensions with this sponsor.</p>
+    {% endif %}
+  </section>
+
+  <section>
+    <h2 class="text-sm font-semibold uppercase tracking-wide text-stone-500 mb-2">Matching specialists ({{ specialist_rows|length }})</h2>
+    {% if specialist_rows %}
+    <ul class="space-y-2">
+      {% for row in specialist_rows %}
+      <li class="bg-white border rounded px-3 py-2 text-sm">
+        <div class="flex items-center justify-between">
+          <span class="font-medium">{{ row.specialist.display_name }}</span>
+          <span class="text-xs px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800">{{ row.overlap_count }} match{{ row.overlap_count|pluralize:"es" }}</span>
+        </div>
+        <div class="mt-1 flex flex-wrap gap-1">
+          {% for tag in row.overlap_tags %}<span class="text-xs px-1.5 py-0.5 rounded bg-stone-100 text-stone-700">{{ tag.value }}</span>{% endfor %}
+        </div>
+        <div class="mt-1 text-xs text-stone-500">{{ row.specialist.availability_hours_per_week }} hrs/wk available</div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+      <p class="text-sm text-stone-500">No specialists share any funding dimensions with this sponsor.</p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

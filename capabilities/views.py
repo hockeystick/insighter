@@ -1,10 +1,14 @@
+from collections import Counter
+
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 
 from capabilities.forms import CapabilityStateForm
-from capabilities.models import CapabilityItem, CapabilityState, Cluster, Outlet
+from capabilities.models import CapabilityItem, CapabilityState, Cluster, Outlet, SharedTag
+from diagnostics.models import CheckIn, Deployment, Sponsor, Specialist
 from insighter.llm.client import has_api_key
 
 
@@ -207,3 +211,97 @@ def mismatch_run(request, slug):
     outlet.mismatch_flag_computed_at = timezone.now()
     outlet.save(update_fields=["mismatch_flag_json", "mismatch_flag_computed_at"])
     return redirect("capabilities:why_stuck", slug=outlet.slug)
+
+
+@login_required
+def sponsor_match_index(request):
+    sponsors = (
+        Sponsor.objects.prefetch_related("tags")
+        .annotate(tag_count=Count("tags"))
+        .order_by("name")
+    )
+    return render(
+        request,
+        "capabilities/sponsor_match_index.html",
+        {"sponsors": sponsors, "outlet_count": Outlet.objects.count(), "specialist_count": Specialist.objects.count()},
+    )
+
+
+@login_required
+def sponsor_match_detail(request, pk):
+    """Rank outlets and specialists by how many SharedTags they share with the sponsor."""
+    sponsor = get_object_or_404(Sponsor.objects.prefetch_related("tags"), pk=pk)
+    sponsor_tag_ids = set(sponsor.tags.values_list("id", flat=True))
+
+    outlet_rows = []
+    for outlet in Outlet.objects.prefetch_related("tags").all():
+        outlet_tag_ids = set(outlet.tags.values_list("id", flat=True))
+        overlap = sponsor_tag_ids & outlet_tag_ids
+        if not overlap:
+            continue
+        outlet_rows.append(
+            {
+                "outlet": outlet,
+                "overlap_count": len(overlap),
+                "overlap_tags": SharedTag.objects.filter(id__in=overlap).order_by("dimension", "value"),
+            }
+        )
+    outlet_rows.sort(key=lambda r: (-r["overlap_count"], r["outlet"].name))
+
+    specialist_rows = []
+    for specialist in Specialist.objects.prefetch_related("tags").all():
+        s_tag_ids = set(specialist.tags.values_list("id", flat=True))
+        overlap = sponsor_tag_ids & s_tag_ids
+        if not overlap:
+            continue
+        specialist_rows.append(
+            {
+                "specialist": specialist,
+                "overlap_count": len(overlap),
+                "overlap_tags": SharedTag.objects.filter(id__in=overlap).order_by("dimension", "value"),
+            }
+        )
+    specialist_rows.sort(key=lambda r: (-r["overlap_count"], r["specialist"].display_name))
+
+    # Tags grouped for header display
+    sponsor_tags_by_dim: dict[str, list[SharedTag]] = {}
+    for tag in sponsor.tags.all().order_by("dimension", "value"):
+        sponsor_tags_by_dim.setdefault(tag.get_dimension_display(), []).append(tag)
+
+    return render(
+        request,
+        "capabilities/sponsor_match_detail.html",
+        {
+            "sponsor": sponsor,
+            "sponsor_tags_by_dim": sponsor_tags_by_dim,
+            "outlet_rows": outlet_rows,
+            "specialist_rows": specialist_rows,
+        },
+    )
+
+
+@login_required
+def deployment_list(request):
+    deployments = (
+        Deployment.objects.select_related("specialist", "outlet")
+        .prefetch_related("specialist__tags")
+        .order_by("-start_date")
+    )
+    return render(
+        request,
+        "capabilities/deployment_list.html",
+        {"deployments": deployments},
+    )
+
+
+@login_required
+def checkin_list(request):
+    checkins = (
+        CheckIn.objects.select_related("outlet", "responded_by")
+        .order_by("-scheduled_for")
+    )
+    return render(
+        request,
+        "capabilities/checkin_list.html",
+        {"checkins": checkins},
+    )

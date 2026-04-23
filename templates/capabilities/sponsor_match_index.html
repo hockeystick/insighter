@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Sponsor match — Insighter{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-4">
+  <div>
+    <h1 class="text-2xl font-semibold">Sponsor match</h1>
+    <p class="text-sm text-stone-600">Sponsors, outlets, and specialists share a single tag vocabulary — region, language, format, topic. Pick a sponsor to see matching outlets and specialists ranked by tag overlap.</p>
+  </div>
+  <span class="text-xs text-stone-500">{{ sponsors|length }} sponsor{{ sponsors|length|pluralize }} · {{ outlet_count }} outlet{{ outlet_count|pluralize }} · {{ specialist_count }} specialist{{ specialist_count|pluralize }}</span>
+</div>
+
+{% if sponsors %}
+<div class="grid md:grid-cols-2 gap-4">
+  {% for sponsor in sponsors %}
+  <a href="{% url 'capabilities:sponsor_match_detail' sponsor.pk %}" class="bg-white border rounded p-4 hover:border-stone-400 transition">
+    <div class="flex items-start justify-between">
+      <h2 class="font-medium">{{ sponsor.name }}</h2>
+      <span class="text-xs text-stone-500">{{ sponsor.tag_count }} tag{{ sponsor.tag_count|pluralize }}</span>
+    </div>
+    {% if sponsor.funding_notes %}
+      <p class="text-xs text-stone-600 mt-1">{{ sponsor.funding_notes }}</p>
+    {% endif %}
+    <div class="mt-2 flex flex-wrap gap-1">
+      {% for tag in sponsor.tags.all %}
+        <span class="text-xs px-1.5 py-0.5 rounded
+          {% if tag.dimension == 'region' %}bg-sky-100 text-sky-800
+          {% elif tag.dimension == 'language' %}bg-emerald-100 text-emerald-800
+          {% elif tag.dimension == 'format' %}bg-amber-100 text-amber-800
+          {% else %}bg-stone-100 text-stone-700{% endif %}">{{ tag.value }}</span>
+      {% endfor %}
+    </div>
+  </a>
+  {% endfor %}
+</div>
+{% else %}
+<div class="bg-white border rounded p-6 text-sm text-stone-600">
+  No sponsors yet. Add some via <a href="/admin/diagnostics/sponsor/" class="underline">admin</a> — tag each sponsor against the dimensions they fund (region, language, format, topic), and outlets with overlapping tags will appear here automatically.
+</div>
+{% endif %}
+{% endblock %}

@@ -185,6 +185,74 @@ class WhyStuckTests(TestCase):
         self.assertEqual(resp.status_code, 503)
 
 
+class SponsorMatcherTests(TestCase):
+    """Tag-overlap ranking across Sponsor / Outlet / Specialist."""
+
+    @classmethod
+    def setUpTestData(cls):
+        from diagnostics.models import Sponsor, Specialist
+        from capabilities.models import SharedTag
+
+        User = get_user_model()
+        cls.user = User.objects.create_user(username="staff3", password="x")
+        cls.lat_am = SharedTag.objects.create(dimension=SharedTag.DIMENSION_REGION, value="Latin America")
+        cls.spanish = SharedTag.objects.create(dimension=SharedTag.DIMENSION_LANGUAGE, value="Spanish")
+        cls.local = SharedTag.objects.create(dimension=SharedTag.DIMENSION_TOPIC, value="Local news")
+        cls.climate = SharedTag.objects.create(dimension=SharedTag.DIMENSION_TOPIC, value="Climate")
+
+        cls.sponsor = Sponsor.objects.create(name="Meridian Fund")
+        cls.sponsor.tags.set([cls.lat_am, cls.spanish, cls.local])
+
+        cls.outlet_match = Outlet.objects.create(name="El Norte", slug="el-norte")
+        cls.outlet_match.tags.set([cls.lat_am, cls.spanish])
+
+        cls.outlet_miss = Outlet.objects.create(name="Kilkenny Post", slug="kilkenny")
+        cls.outlet_miss.tags.set([cls.climate])
+
+        alma = User.objects.create_user(username="alma", password="x")
+        cls.specialist = Specialist.objects.create(user=alma, display_name="Alma R.")
+        cls.specialist.tags.set([cls.lat_am, cls.spanish])
+
+    def setUp(self):
+        self.client.login(username="staff3", password="x")
+
+    def test_sponsor_match_index_lists_sponsors(self):
+        resp = self.client.get(reverse("capabilities:sponsor_match_index"))
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, "Meridian Fund")
+
+    def test_sponsor_detail_ranks_by_overlap_and_excludes_zero_overlap(self):
+        resp = self.client.get(reverse("capabilities:sponsor_match_detail", args=[self.sponsor.pk]))
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, "El Norte")
+        self.assertNotContains(resp, "Kilkenny Post")
+        self.assertContains(resp, "Alma R.")
+        # El Norte overlaps on 2 tags (Latin America + Spanish)
+        self.assertContains(resp, "2 matches")
+
+
+class StubScreenTests(TestCase):
+    """Deployment + CheckIn list views render with empty state and with data."""
+
+    @classmethod
+    def setUpTestData(cls):
+        User = get_user_model()
+        cls.user = User.objects.create_user(username="stubs", password="x")
+
+    def setUp(self):
+        self.client.login(username="stubs", password="x")
+
+    def test_deployment_list_empty(self):
+        resp = self.client.get(reverse("capabilities:deployment_list"))
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, "No deployments")
+
+    def test_checkin_list_empty(self):
+        resp = self.client.get(reverse("capabilities:checkin_list"))
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, "No check-ins")
+
+
 class TaxonomyBrowserTests(TestCase):
     """Public read-only taxonomy view + subcluster parsing."""
 

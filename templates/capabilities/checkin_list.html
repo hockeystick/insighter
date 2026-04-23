@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Check-ins — Insighter{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-4">
+  <div>
+    <h1 class="text-2xl font-semibold">30/60/90-day check-ins</h1>
+    <p class="text-sm text-stone-600">Behavioural, not satisfaction. Are they running personas? Did they ship a small experiment last month? Is the data champion still in role? Schema is wired; scheduling + email ships v0.2.</p>
+  </div>
+</div>
+
+{% if checkins %}
+<table class="w-full bg-white rounded border text-sm">
+  <thead class="bg-stone-100 text-xs text-stone-600">
+    <tr>
+      <th class="px-4 py-2 text-left">Outlet</th>
+      <th class="px-4 py-2 text-left">Milestone</th>
+      <th class="px-4 py-2 text-left">Scheduled</th>
+      <th class="px-4 py-2 text-left">Responded</th>
+      <th class="px-4 py-2 text-left">By</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for c in checkins %}
+    <tr class="border-t">
+      <td class="px-4 py-2"><a href="{% url 'capabilities:outlet_detail' c.outlet.slug %}" class="font-medium hover:underline">{{ c.outlet.name }}</a></td>
+      <td class="px-4 py-2 text-stone-700">{{ c.get_milestone_day_display }}</td>
+      <td class="px-4 py-2 text-stone-600">{{ c.scheduled_for }}</td>
+      <td class="px-4 py-2">
+        {% if c.responded_at %}
+          <span class="px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 text-xs">{{ c.responded_at|date:"Y-m-d" }}</span>
+        {% else %}
+          <span class="px-1.5 py-0.5 rounded bg-stone-100 text-stone-500 text-xs">pending</span>
+        {% endif %}
+      </td>
+      <td class="px-4 py-2 text-stone-600">{{ c.responded_by.username|default:"—" }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<div class="bg-white border rounded p-6 text-sm text-stone-600">
+  No check-ins scheduled yet.
+</div>
+{% endif %}
+{% endblock %}

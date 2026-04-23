@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Deployments — Insighter{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-4">
+  <div>
+    <h1 class="text-2xl font-semibold">Specialist deployments</h1>
+    <p class="text-sm text-stone-600">Who is working with which outlet, on what, and until when. Schema is wired; full flow ships v0.2.</p>
+  </div>
+  <a href="/admin/diagnostics/deployment/add/" class="text-sm text-stone-600 hover:text-stone-900">+ add via admin</a>
+</div>
+
+{% if deployments %}
+<table class="w-full bg-white rounded border text-sm">
+  <thead class="bg-stone-100 text-xs text-stone-600">
+    <tr>
+      <th class="px-4 py-2 text-left">Specialist</th>
+      <th class="px-4 py-2 text-left">Outlet</th>
+      <th class="px-4 py-2 text-left">Start</th>
+      <th class="px-4 py-2 text-left">End</th>
+      <th class="px-4 py-2 text-right">Hours</th>
+      <th class="px-4 py-2 text-left">Handover notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for d in deployments %}
+    <tr class="border-t">
+      <td class="px-4 py-2 font-medium">{{ d.specialist.display_name }}</td>
+      <td class="px-4 py-2"><a href="{% url 'capabilities:outlet_detail' d.outlet.slug %}" class="hover:underline">{{ d.outlet.name }}</a></td>
+      <td class="px-4 py-2 text-stone-600">{{ d.start_date }}</td>
+      <td class="px-4 py-2 text-stone-600">{{ d.end_date|default:"—" }}</td>
+      <td class="px-4 py-2 text-right text-stone-600">{{ d.hours_committed }}</td>
+      <td class="px-4 py-2 text-stone-700">{{ d.handover_notes|default:"—"|truncatechars:80 }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<div class="bg-white border rounded p-6 text-sm text-stone-600">
+  No deployments recorded yet. Add some via <a href="/admin/diagnostics/deployment/add/" class="underline">admin</a>.
+  The same SharedTag vocabulary that powers sponsor match drives specialist routing here.
+</div>
+{% endif %}
+{% endblock %}
