@@ -1,98 +1,63 @@
-# Insighter — overnight status
+# Insighter — status after Thursday resume
 
-Stop triggered at the end of Thursday's scope (per your rules: no LLM
-work overnight; 5-commit / 4-hour cap observed).
+## What changed this session
 
-## What's done
+Three things shipped; one blocked on your call.
 
-**4 commits** on `main`:
+| # | Task | Outcome | Commit |
+|---|------|---------|--------|
+| 1 | Split level scale (depth vs bus-factor) | ✅ done | `942a337` |
+| 2 | Add MIT LICENSE | ✅ done | `6bb941f` |
+| 3 | Backfill taxonomy metadata from xlsx | ⛔ blocked on schema decision | — |
+| 4 | Update STATUS + DECISIONS | ✅ done | this commit |
 
-1. `ab14d2a` Scaffold Django 5 project with capabilities + diagnostics apps
-2. `4828a37` Define core data model for capability tracker
-3. `ec676e0` Seed audience-development taxonomy from brief
-4. `51c08c8` Build outlet detail + state-change + diagnostic-entry flows
+## Blocker — taxonomy granularity
 
-**Working v0.1 flow** (all green on `manage.py test` — 8 passing):
-- Outlet list → outlet detail → capability state grid by cluster
-- Manual state-change form (appends a row; history never mutated)
-- Diagnostic entry (raw notes textarea → detail view with linked state changes)
-- Login-required on all app views; Django admin at `/admin/` for
-  taxonomy maintenance
-- Tailwind via CDN, no build step
+The xlsx metadata is at **L3 task** level (90 tasks), our model maps
+`CapabilityItem` to **L2 subcluster** (43 items). Metadata varies within
+L2 groups for most fields — lossless aggregation isn't available.
 
-**Taxonomy seeded**: 9 clusters × 43 items, names verbatim from the
-brief. Metadata fields at model defaults pending your pass.
+See **DECISIONS.md #7** for the full breakdown and 4 options. Recommended
+option is (a): rebuild fixture as L3 tasks. Default on next resume
+unless you pick otherwise.
 
-**Tests**: append-only semantics, evidence-required validation, view
-smoke tests (list / detail / state append / diagnostic redirect /
-login-required redirect).
+## Test state
 
-## How to run it
+9 tests passing (added one for the champion flag being independent of
+depth).
 
-```bash
-cd /Users/alimahmood/Downloads/Insighter
-.venv/bin/python manage.py createsuperuser     # one-time
-.venv/bin/python manage.py loaddata taxonomy_seed
-.venv/bin/python manage.py runserver
+## Git state
+
 ```
-Then: http://127.0.0.1:8000/admin/ to add an Outlet, then
-http://127.0.0.1:8000/ for the tracker view.
+6bb941f Add MIT LICENSE
+942a337 Split level scale: separate depth from bus-factor
+db62a70 Add STATUS.md summarising overnight execution stop
+51c08c8 Build outlet detail + state-change + diagnostic-entry flows
+ec676e0 Seed audience-development taxonomy from brief
+4828a37 Define core data model for capability tracker
+ab14d2a Scaffold Django 5 project with capabilities + diagnostics apps
+```
 
-## What's pending your input (see DECISIONS.md)
+`main` is 2 commits ahead of `origin/main` (you rewrote the earlier
+bad commit out, so history is clean — no xlsx blob anywhere).
 
-1. **Level scale** — single field conflates depth with bus-factor;
-   options a/b/c listed. Default = keep single field.
-2. **License** — AGPL-3.0 vs MIT; no `LICENSE` written yet.
-3. **Taxonomy metadata values** — 43 items need priority / baseline /
-   template-able / phase / assessment-method / cross-desk-dep set per
-   your judgment.
-4. **Mismatch flagger prompt** — Friday scope, waiting on you.
-5. **Seed outlet voices + diagnostic notes** — Plan-review called this
-   out as the highest-leverage Thursday task. `fixtures/demo_outlets.json`
-   is empty.
-6. **Demo UX polish** — colour choices, grid layout beyond basic,
-   typography. Saturday scope, your call.
+## Pending (unchanged)
 
-## Pending tasks
-
-- **Friday** (requires your inputs on prompts + API key):
-  - Anthropic SDK wrapper with prompt caching on taxonomy block
-  - Synthesis tool-use endpoint (schema done per plan; prompt TBD)
-  - Mismatch flagger endpoint (same)
-  - Diff UI for reviewing proposed state changes
-- **Saturday**:
-  - "Why is this outlet stuck?" composed view (Plan-review addition)
-  - Sponsor matcher filtered table
-  - Stub screens for Specialist deployment + CheckIn with seed data
-  - Read-only taxonomy browser (not admin) for the demo
-  - First demo-video cut
-- **Sunday**:
-  - README + LICENSE + deploy doc
-  - Written summary
-  - Final demo video re-record
-  - Buffer
+- **Friday** (requires your input on prompts + API key): Anthropic SDK,
+  synthesis endpoint, mismatch flagger, diff UI
+- **Saturday**: "why stuck" view, sponsor matcher, stubs, read-only
+  taxonomy browser, first demo video
+- **Sunday**: README, deploy doc, final video, summary, buffer
 
 ## What I did not touch
 
 Per overnight rules:
-- No LLM integration code, no `anthropic` dependency, no API key usage.
-- No seed outlet or diagnostic-note content written.
-- No level-scale schema split (DECISIONS.md #1 unresolved).
-- No license file.
-- No UX beyond basic server-rendered Tailwind layout.
+- No LLM integration code.
+- No seed outlet or diagnostic content.
+- No demo UX polish.
+- No schema rebuild for the L3-task question — waiting for your call.
 
-## Risks / things to verify when you're back
+## Time budget
 
-- Migrations: 3 applied (`capabilities.0001`, `diagnostics.0001`,
-  `capabilities.0002`). If you change the level-scale schema, squash
-  these before the fixture gets filled in — cheaper now than later.
-- Tailwind-via-CDN is fine for dev but judges may probe offline demos.
-  Worth a 5-min `pip install django-tailwind` swap Saturday if demo
-  needs to run air-gapped.
-- `login_required` points to `/admin/login/` — fine for v0.1, but flag
-  in README that this is staff-only and the high-risk-env access
-  control story is v0.2.
-
-## Time budget used
-
-Roughly 2 hours wall-clock. 4-hour / 5-commit cap not hit.
+~30 min wall-clock this session. 2 commits landed (+ 1 to wrap now).
+Hard stop cap of 5 not hit.

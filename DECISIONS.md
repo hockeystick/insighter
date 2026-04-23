@@ -1,77 +1,75 @@
-# Decisions pending — need your input
+# Decisions — status after Thursday resume
 
-Logged during overnight execution. Each item is paused per the overnight
-rules; nothing here has been guessed in code.
+## Resolved
 
-## 1. Level scale: does `level` conflate depth with bus-factor?
+- **#1 Level scale**: split. `level` enum is now Unknown / Aware / Practising /
+  Embedded (depth only); `led_by_champion: bool` is a separate field for
+  bus-factor-at-capability. Migration `capabilities.0003` applied. Commit
+  `942a337`.
+- **#2 License**: MIT. `LICENSE` file committed (`6bb941f`).
 
-**Current plan**: single `level` field on `CapabilityState` with values
-`Unknown / 1 Aware / 2 Practising / 3 Embedded / 4 Data-champion-led`.
+## NEW BLOCKER — #7 Taxonomy granularity: L2 vs L3
 
-**The tension**: level 4 ("data-champion-led") encodes *who is sustaining
-the practice*, while levels 1–3 encode *how deeply the practice has
-landed*. An outlet could be at "embedded" depth but still dependent on
-programme staff (bus factor = 1), or at "practising" depth but already
-self-sustaining on that specific capability.
+The xlsx has three hierarchy levels: **L1 cluster → L2 subcluster → L3 task**.
+Metadata (Priority, Baseline, Template-able, Phase, Assessment, Secondary)
+lives on **L3 tasks**, not on L2 subclusters.
 
-**Options**:
-- (a) Keep single `level` as-is. Simpler; demo reads cleaner; the
-  conflation is a known limitation.
-- (b) Split into two fields: `depth` (1–4) + `sustained_internally`
-  (bool, nullable). More honest to the Bus-Factor KPI. One more column
-  in the state grid UI.
-- (c) Split into `depth` (1–4) + `ownership` (enum:
-  `programme-dependent / shared / outlet-led`). Most expressive;
-  heaviest UI.
+Our current `CapabilityItem` maps to **L2 subcluster** (e.g. "Service
+blueprint", "Loyalty ladder"). The xlsx has 90 distinct L3 tasks across 54
+L2 subclusters in 12 L1 clusters. A single L2 typically has 1–4 tasks.
 
-**Implemented now**: option (a) scaffolded with a comment in the model.
-Migration is trivial to change if you pick (b) or (c) before Friday.
+**The shape mismatch, concretely:**
+- Current fixture: 9 clusters × 43 items (L2, no metadata)
+- xlsx truth: 12 clusters × 54 L2 subclusters × 90 L3 tasks (metadata per task)
+- Within L2 groups that have >1 task (25 such groups), metadata **varies**
+  for most fields: Priority varies in 17/25 groups, Baseline 13/25,
+  Template-able 15/25, Phase 13/25. Assessment is mostly stable (7/25 vary),
+  Secondary mostly stable (9/25).
 
-**Question for you**: (a), (b), or (c)? Default if no answer by Thursday
-evening = (a).
+So: there's no lossless way to push task-level metadata onto L2 items
+without either schema change or aggregation that discards signal.
 
-## 2. License: AGPL-3.0 vs MIT?
+**Also**: the xlsx has clusters the brief omitted — `Video Audience`,
+`Community & Engagement Infrastructure`, `Assessment & Baseline`, and
+`Analytics & First-Party Data` (vs our `Analytics & first-party data`, case
+difference). Cluster wording and ordering differs too.
 
-**Plan draft said AGPL-3.0**. Reasoning was "open source end to end"
-+ "self-hostable" implies protecting the hub's work from being
-re-hosted as a closed SaaS.
+### Options
 
-**Counter-argument for MIT**: maximum reuse by other newsrooms and
-desks, less friction for sponsors/partners adopting the code, better
-ecosystem fit for hackathons.
+- **(a) L3 = CapabilityItem.** Rebuild the fixture from the xlsx. Items
+  become tasks (90 instead of 43). Clusters updated to match xlsx (12 not
+  9). Schema unchanged. Most honest mapping to the source of truth; best
+  for the demo because each item carries real metadata. Biggest fixture
+  rewrite.
+- **(b) L2 stays, aggregate metadata.** Keep current 43 items. Collapse
+  task-level metadata to L2 (majority vote, or highest priority across
+  tasks). Lossy; ~70% of L2 groups have varying signal that gets
+  flattened. Smallest change, but defensibly wrong.
+- **(c) L2 keeps structural role, add L3 model.** Add a `CapabilityTask`
+  model as a child of `CapabilityItem`, carrying the metadata. Most
+  expressive. State history still lives at L2 (one row per subcluster per
+  outlet). Biggest schema change; may or may not be worth it for v0.1.
+- **(d) L2 items, metadata only where task-level is consistent.**
+  Populate only the fields that are uniform across an L2 group. Mixed
+  signal; messy.
 
-**Not implemented**: no `LICENSE` file written yet. Please pick.
-Default if no answer = AGPL-3.0 per the plan.
+### Recommendation
 
-## 3. Taxonomy metadata values per item
+**(a).** The plan's "source of truth is the diagnostic" stance means the
+capability structure should match what the desk actually uses. The
+30/60/90 behavioural check-in and practice-adoption framing reads better
+at task granularity anyway ("are they running personas?" not "are they
+doing audience research?"). And it's the cleanest thing to demo.
 
-The brief listed the 9 clusters and their items by name, but didn't
-specify the per-item metadata values (priority H/M/L, baseline y/n,
-template-able y/n, phase, assessment method, cross-desk dependency).
+Cost: one fixture rewrite and an update to the `outlet_detail` template's
+grid rendering (group by L1 cluster, show task name under it). No model
+changes. Existing `CapabilityState` rows would need re-keying, but there
+are no seed state rows yet, so no data loss.
 
-**Implemented**: fixture with cluster + item names only. Metadata
-fields set to neutral defaults (priority=Medium, baseline=False,
-template_able=False, phase=Advisory, assessment_method=Interview,
-cross_desk_dep=null). These are placeholders, **not** judgments.
+**Default if no answer**: (a) on next resume.
 
-**Needed from you**: a pass through `fixtures/taxonomy_seed.json`
-to fill in the real metadata values, or a separate spreadsheet I can
-convert. Roughly 45 items × 6 fields.
+## Still pending
 
-## 4. Mismatch flagger prompt wording
-
-Scoped out of overnight per your rules. Endpoint + tool schema will
-be scaffolded Friday; the actual system prompt wording waits for you.
-
-## 5. Seed outlet voices + diagnostic note wording
-
-Scoped out of overnight per your rules. `fixtures/demo_outlets.json`
-and `fixtures/demo_diagnostics.json` left as empty JSON arrays with
-TODO comments. Plan-review flagged this as the single highest-leverage
-Thursday task — your voice, not mine.
-
-## 6. UX decisions beyond basic layout
-
-None taken overnight. Basic server-rendered tables + a capability
-grid are scaffolded without Tailwind polish, colour choices, or demo
-styling. Sat polish pass is yours to drive.
+- **#4 Mismatch flagger prompt**: Friday scope.
+- **#5 Seed outlet voices + diagnostic notes**: yours to write.
+- **#6 Demo UX polish**: Saturday.
