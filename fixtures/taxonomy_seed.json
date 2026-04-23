@@ -14,7 +14,7 @@
     "pk": 2,
     "fields": {
       "desk": "audience_development",
-      "name": "Audience research",
+      "name": "Conversion",
       "description": "",
       "order": 2
     }
@@ -24,7 +24,7 @@
     "pk": 3,
     "fields": {
       "desk": "audience_development",
-      "name": "Segmentation",
+      "name": "Audience Research",
       "description": "",
       "order": 3
     }
@@ -34,7 +34,7 @@
     "pk": 4,
     "fields": {
       "desk": "audience_development",
-      "name": "Conversion",
+      "name": "Segmentation",
       "description": "",
       "order": 4
     }
@@ -74,7 +74,7 @@
     "pk": 8,
     "fields": {
       "desk": "audience_development",
-      "name": "Data & compliance",
+      "name": "Data & Compliance",
       "description": "",
       "order": 8
     }
@@ -84,61 +84,1479 @@
     "pk": 9,
     "fields": {
       "desk": "audience_development",
-      "name": "Analytics & first-party data",
+      "name": "Video Audience",
       "description": "",
       "order": 9
     }
   },
-
-  {"model":"capabilities.capabilityitem","pk":101,"fields":{"cluster":1,"name":"Service blueprint","order":1}},
-  {"model":"capabilities.capabilityitem","pk":102,"fields":{"cluster":1,"name":"Loyalty ladder","order":2}},
-  {"model":"capabilities.capabilityitem","pk":103,"fields":{"cluster":1,"name":"Value exchange","order":3}},
-  {"model":"capabilities.capabilityitem","pk":104,"fields":{"cluster":1,"name":"Feedback loops","order":4}},
-  {"model":"capabilities.capabilityitem","pk":105,"fields":{"cluster":1,"name":"Needs mapping","order":5}},
-
-  {"model":"capabilities.capabilityitem","pk":201,"fields":{"cluster":2,"name":"Continuous listening","order":1}},
-  {"model":"capabilities.capabilityitem","pk":202,"fields":{"cluster":2,"name":"Competitive landscape","order":2}},
-  {"model":"capabilities.capabilityitem","pk":203,"fields":{"cluster":2,"name":"Audience signals","order":3}},
-  {"model":"capabilities.capabilityitem","pk":204,"fields":{"cluster":2,"name":"Research methods","order":4}},
-  {"model":"capabilities.capabilityitem","pk":205,"fields":{"cluster":2,"name":"Persona creation","order":5}},
-  {"model":"capabilities.capabilityitem","pk":206,"fields":{"cluster":2,"name":"Persona validation","order":6}},
-  {"model":"capabilities.capabilityitem","pk":207,"fields":{"cluster":2,"name":"Persona-content mapping","order":7}},
-
-  {"model":"capabilities.capabilityitem","pk":301,"fields":{"cluster":3,"name":"Behavioural segmentation","order":1}},
-  {"model":"capabilities.capabilityitem","pk":302,"fields":{"cluster":3,"name":"Geo / language segmentation","order":2}},
-  {"model":"capabilities.capabilityitem","pk":303,"fields":{"cluster":3,"name":"New vs returning","order":3}},
-  {"model":"capabilities.capabilityitem","pk":304,"fields":{"cluster":3,"name":"Segment-content strategy","order":4}},
-
-  {"model":"capabilities.capabilityitem","pk":401,"fields":{"cluster":4,"name":"Conversion architecture","order":1}},
-  {"model":"capabilities.capabilityitem","pk":402,"fields":{"cluster":4,"name":"Registration strategy","order":2}},
-
-  {"model":"capabilities.capabilityitem","pk":501,"fields":{"cluster":5,"name":"Engagement definition","order":1}},
-  {"model":"capabilities.capabilityitem","pk":502,"fields":{"cluster":5,"name":"Engagement scoring","order":2}},
-  {"model":"capabilities.capabilityitem","pk":503,"fields":{"cluster":5,"name":"Habit formation","order":3}},
-  {"model":"capabilities.capabilityitem","pk":504,"fields":{"cluster":5,"name":"Churn prevention","order":4}},
-  {"model":"capabilities.capabilityitem","pk":505,"fields":{"cluster":5,"name":"Retention measurement","order":5}},
-  {"model":"capabilities.capabilityitem","pk":506,"fields":{"cluster":5,"name":"Re-engagement","order":6}},
-
-  {"model":"capabilities.capabilityitem","pk":601,"fields":{"cluster":6,"name":"Community design","order":1}},
-  {"model":"capabilities.capabilityitem","pk":602,"fields":{"cluster":6,"name":"Community engagement","order":2}},
-  {"model":"capabilities.capabilityitem","pk":603,"fields":{"cluster":6,"name":"Community health","order":3}},
-  {"model":"capabilities.capabilityitem","pk":604,"fields":{"cluster":6,"name":"Events strategy and operations","order":4}},
-
-  {"model":"capabilities.capabilityitem","pk":701,"fields":{"cluster":7,"name":"Acquisition channels","order":1}},
-  {"model":"capabilities.capabilityitem","pk":702,"fields":{"cluster":7,"name":"Peer cross-promotion","order":2}},
-  {"model":"capabilities.capabilityitem","pk":703,"fields":{"cluster":7,"name":"Growth targets","order":3}},
-  {"model":"capabilities.capabilityitem","pk":704,"fields":{"cluster":7,"name":"Paid acquisition","order":4}},
-  {"model":"capabilities.capabilityitem","pk":705,"fields":{"cluster":7,"name":"Referrals","order":5}},
-
-  {"model":"capabilities.capabilityitem","pk":801,"fields":{"cluster":8,"name":"Consent","order":1}},
-  {"model":"capabilities.capabilityitem","pk":802,"fields":{"cluster":8,"name":"List hygiene","order":2}},
-  {"model":"capabilities.capabilityitem","pk":803,"fields":{"cluster":8,"name":"Contact enrichment","order":3}},
-  {"model":"capabilities.capabilityitem","pk":804,"fields":{"cluster":8,"name":"Org / personal split","order":4}},
-  {"model":"capabilities.capabilityitem","pk":805,"fields":{"cluster":8,"name":"Accessibility","order":5}},
-  {"model":"capabilities.capabilityitem","pk":806,"fields":{"cluster":8,"name":"Language access","order":6}},
-  {"model":"capabilities.capabilityitem","pk":807,"fields":{"cluster":8,"name":"Revenue readiness","order":7}},
-
-  {"model":"capabilities.capabilityitem","pk":901,"fields":{"cluster":9,"name":"Data literacy","order":1}},
-  {"model":"capabilities.capabilityitem","pk":902,"fields":{"cluster":9,"name":"Data champion development","order":2}},
-  {"model":"capabilities.capabilityitem","pk":903,"fields":{"cluster":9,"name":"Activation layer","order":3}}
+  {
+    "model": "capabilities.cluster",
+    "pk": 10,
+    "fields": {
+      "desk": "audience_development",
+      "name": "Assessment & Baseline",
+      "description": "",
+      "order": 10
+    }
+  },
+  {
+    "model": "capabilities.cluster",
+    "pk": 11,
+    "fields": {
+      "desk": "audience_development",
+      "name": "Community & Engagement Infrastructure",
+      "description": "",
+      "order": 11
+    }
+  },
+  {
+    "model": "capabilities.cluster",
+    "pk": 12,
+    "fields": {
+      "desk": "audience_development",
+      "name": "Analytics & First-Party Data",
+      "description": "",
+      "order": 12
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 1001,
+    "fields": {
+      "cluster": 1,
+      "name": "Map current audience touchpoints end-to-end",
+      "description": "Subcluster: Service blueprint\nNotes: Foundation for all other service design work",
+      "priority": "L",
+      "baseline": false,
+      "template_able": true,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 1
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 1002,
+    "fields": {
+      "cluster": 1,
+      "name": "Identify pain points and drop-off moments in audience journey",
+      "description": "Subcluster: Service blueprint",
+      "priority": "H",
+      "baseline": true,
+      "template_able": false,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 2
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 1003,
+    "fields": {
+      "cluster": 1,
+      "name": "Design target-state audience journey with entry/exit criteria per stage",
+      "description": "Subcluster: Service blueprint",
+      "priority": "L",
+      "baseline": true,
+      "template_able": true,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 3
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 1004,
+    "fields": {
+      "cluster": 1,
+      "name": "Define audience lifecycle stages (anonymous > casual > regular > loyal > advocate)",
+      "description": "Subcluster: Loyalty ladder\nNotes: Drives segmentation and retention strategy",
+      "priority": "H",
+      "baseline": true,
+      "template_able": true,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 4
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 2001,
+    "fields": {
+      "cluster": 2,
+      "name": "Map content and engagement tactics to each lifecycle stage",
+      "description": "Subcluster: Loyalty ladder",
+      "priority": "H",
+      "baseline": true,
+      "template_able": true,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 1
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 1005,
+    "fields": {
+      "cluster": 1,
+      "name": "Document what the audience gets at each engagement level (free vs registered vs paying)",
+      "description": "Subcluster: Value exchange",
+      "priority": "H",
+      "baseline": true,
+      "template_able": false,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 5
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 1006,
+    "fields": {
+      "cluster": 1,
+      "name": "Design and deploy at least one audience feedback mechanism",
+      "description": "Subcluster: Value exchange\nNotes: Surveys, comment analysis, direct outreach",
+      "priority": "H",
+      "baseline": true,
+      "template_able": true,
+      "phase": "activation",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 6
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 1007,
+    "fields": {
+      "cluster": 1,
+      "name": "Add audience feedback step to editorial workflow checklist",
+      "description": "Subcluster: Feedback loops",
+      "priority": "H",
+      "baseline": true,
+      "template_able": true,
+      "phase": "activation",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 7
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 1008,
+    "fields": {
+      "cluster": 1,
+      "name": "Schedule and run monthly audience insight review with editorial leads",
+      "description": "Subcluster: Feedback loops\nNotes: Monthly or per-cycle review of audience signals",
+      "priority": "H",
+      "baseline": true,
+      "template_able": true,
+      "phase": "activation",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 8
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 1009,
+    "fields": {
+      "cluster": 1,
+      "name": "Map audience information needs to content areas using survey + analytics data",
+      "description": "Subcluster: Needs mapping",
+      "priority": "H",
+      "baseline": true,
+      "template_able": true,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 9
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 1010,
+    "fields": {
+      "cluster": 1,
+      "name": "Produce a gap analysis: content output vs audience needs",
+      "description": "Subcluster: Needs mapping",
+      "priority": "M",
+      "baseline": true,
+      "template_able": false,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "03 Publishing Technologies",
+      "order": 10
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 3001,
+    "fields": {
+      "cluster": 3,
+      "name": "Set up weekly monitoring of search trends, social mentions, and comment themes",
+      "description": "Subcluster: Continuous listening\nNotes: Audience understanding as practice, not one-off",
+      "priority": "H",
+      "baseline": true,
+      "template_able": true,
+      "phase": "activation",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 1
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 3002,
+    "fields": {
+      "cluster": 3,
+      "name": "Run quarterly audience insight refresh and distribute findings to editorial",
+      "description": "Subcluster: Continuous listening",
+      "priority": "H",
+      "baseline": true,
+      "template_able": true,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 2
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 3003,
+    "fields": {
+      "cluster": 3,
+      "name": "Map competing information sources for each target audience segment",
+      "description": "Subcluster: Competitive landscape",
+      "priority": "M",
+      "baseline": false,
+      "template_able": false,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 3
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 3004,
+    "fields": {
+      "cluster": 3,
+      "name": "Define leading indicators of audience need shifts (search volume, topic trends)",
+      "description": "Subcluster: Audience signals\nNotes: Especially for volatile/exile contexts",
+      "priority": "M",
+      "baseline": false,
+      "template_able": false,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 4
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 3005,
+    "fields": {
+      "cluster": 3,
+      "name": "Build a signal-to-action workflow: when indicator X fires, editorial does Y",
+      "description": "Subcluster: Audience signals",
+      "priority": "M",
+      "baseline": false,
+      "template_able": true,
+      "phase": "activation",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 5
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 3006,
+    "fields": {
+      "cluster": 3,
+      "name": "Run community listening across WhatsApp groups, comments, and social",
+      "description": "Subcluster: Research methods\nNotes: High-value but time-intensive; for outlets with active community channels",
+      "priority": "M",
+      "baseline": false,
+      "template_able": false,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 6
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 3007,
+    "fields": {
+      "cluster": 3,
+      "name": "Design and deploy a lightweight audience survey (< 10 questions)",
+      "description": "Subcluster: Research methods\nNotes: Template survey for cohort use",
+      "priority": "H",
+      "baseline": true,
+      "template_able": true,
+      "phase": "resources",
+      "assessment_method": "survey",
+      "cross_desk_dep": "",
+      "order": 7
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 3008,
+    "fields": {
+      "cluster": 3,
+      "name": "Complete an existing data audit across analytics, ESP, and CMS",
+      "description": "Subcluster: Research methods\nNotes: Overlap: Analytics owns the tooling; Audience Dev owns the interpretation",
+      "priority": "H",
+      "baseline": true,
+      "template_able": true,
+      "phase": "advisory",
+      "assessment_method": "file_transfer",
+      "cross_desk_dep": "03 Publishing Technologies",
+      "order": 8
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 3009,
+    "fields": {
+      "cluster": 3,
+      "name": "Conduct at least 5 user interviews or 1 focus group per persona",
+      "description": "Subcluster: Research methods\nNotes: Too resource-heavy for 4-month cohort; recommend as post-program activity",
+      "priority": "L",
+      "baseline": false,
+      "template_able": false,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 9
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 3010,
+    "fields": {
+      "cluster": 3,
+      "name": "Facilitate persona creation workshop with editorial and audience teams",
+      "description": "Subcluster: Persona creation\nNotes: Core JD KPI: Persona Development",
+      "priority": "H",
+      "baseline": true,
+      "template_able": true,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 10
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 3011,
+    "fields": {
+      "cluster": 3,
+      "name": "Test each persona hypothesis against analytics and survey data; revise or discard",
+      "description": "Subcluster: Persona validation\nNotes: Use analytics to confirm or challenge persona assumptions",
+      "priority": "H",
+      "baseline": true,
+      "template_able": false,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "03 Publishing Technologies",
+      "order": 11
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 3012,
+    "fields": {
+      "cluster": 3,
+      "name": "Map each validated persona to editorial pillars",
+      "description": "Subcluster: Persona-content mapping",
+      "priority": "M",
+      "baseline": false,
+      "template_able": false,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "04 Surface Strategies",
+      "order": 12
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 3013,
+    "fields": {
+      "cluster": 3,
+      "name": "Identify content gaps per persona and prioritize top 3 for production",
+      "description": "Subcluster: Persona-content mapping\nNotes: Bridge between persona work and surface-level content decisions",
+      "priority": "H",
+      "baseline": true,
+      "template_able": true,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "04 Surface Strategies",
+      "order": 13
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 4001,
+    "fields": {
+      "cluster": 4,
+      "name": "Define engagement tiers (active / lapsed / dormant) with quantitative thresholds",
+      "description": "Subcluster: Behavioral segments",
+      "priority": "H",
+      "baseline": true,
+      "template_able": true,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 1
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 4002,
+    "fields": {
+      "cluster": 4,
+      "name": "Tag subscribers by content preference or topic interest in ESP",
+      "description": "Subcluster: Behavioral segments\nNotes: Depends on ESP capability and list size",
+      "priority": "M",
+      "baseline": false,
+      "template_able": true,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "05 Automation and AI",
+      "order": 2
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 4003,
+    "fields": {
+      "cluster": 4,
+      "name": "Define audience segments by geography, language, and local context",
+      "description": "Subcluster: Geo/language segments\nNotes: Critical for multilingual outlets; skip for single-language operations",
+      "priority": "M",
+      "baseline": false,
+      "template_able": true,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 3
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 4004,
+    "fields": {
+      "cluster": 4,
+      "name": "Build behavioral rules in analytics tool distinguishing new visitors from returning readers",
+      "description": "Subcluster: New vs returning\nNotes: Basic GA/CMS segmentation",
+      "priority": "H",
+      "baseline": true,
+      "template_able": true,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "03 Publishing Technologies",
+      "order": 4
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 4005,
+    "fields": {
+      "cluster": 4,
+      "name": "Produce a segment-to-content matrix: which formats and topics serve which segment",
+      "description": "Subcluster: Segment-content strategy\nNotes: Depends on having segments defined first",
+      "priority": "M",
+      "baseline": false,
+      "template_able": false,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "04 Surface Strategies",
+      "order": 5
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 2002,
+    "fields": {
+      "cluster": 2,
+      "name": "Define one conversion goal per audience lifecycle stage",
+      "description": "Subcluster: Conversion architecture",
+      "priority": "H",
+      "baseline": true,
+      "template_able": true,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 2
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 2003,
+    "fields": {
+      "cluster": 2,
+      "name": "Audit current conversion paths and document gaps",
+      "description": "Subcluster: Conversion architecture",
+      "priority": "H",
+      "baseline": true,
+      "template_able": false,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "03 Publishing Technologies",
+      "order": 3
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 2004,
+    "fields": {
+      "cluster": 2,
+      "name": "Design calls-to-action matched to content type (article, newsletter, video)",
+      "description": "Subcluster: Conversion architecture",
+      "priority": "M",
+      "baseline": true,
+      "template_able": true,
+      "phase": "activation",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 4
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 2005,
+    "fields": {
+      "cluster": 2,
+      "name": "Evaluate registration wall vs open access: run A/B test or produce trade-off analysis",
+      "description": "Subcluster: Registration strategy",
+      "priority": "M",
+      "baseline": false,
+      "template_able": false,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 5
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 2006,
+    "fields": {
+      "cluster": 2,
+      "name": "Implement registration system",
+      "description": "Subcluster: Registration strategy",
+      "priority": "M",
+      "baseline": false,
+      "template_able": false,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 6
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 2007,
+    "fields": {
+      "cluster": 2,
+      "name": "Design progressive profiling: collect one data point per interaction",
+      "description": "Subcluster: Registration strategy\nNotes: Collect audience data gradually without friction",
+      "priority": "L",
+      "baseline": false,
+      "template_able": false,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 7
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 5001,
+    "fields": {
+      "cluster": 5,
+      "name": "Define what 'engaged' means for this outlet with specific metric thresholds",
+      "description": "Subcluster: Engagement definition\nNotes: Requires stable baseline data first",
+      "priority": "H",
+      "baseline": false,
+      "template_able": true,
+      "phase": "activation",
+      "assessment_method": "interview",
+      "cross_desk_dep": "03 Publishing Technologies",
+      "order": 1
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 5002,
+    "fields": {
+      "cluster": 5,
+      "name": "Build engagement score combining frequency, depth, and recency",
+      "description": "Subcluster: Engagement scoring\nNotes: Valuable but too labor-intensive for cohort model; recommend post-program",
+      "priority": "L",
+      "baseline": false,
+      "template_able": false,
+      "phase": "activation",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 2
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 5003,
+    "fields": {
+      "cluster": 5,
+      "name": "Identify top 3 behaviors that correlate with long-term retention and design nudges for each",
+      "description": "Subcluster: Habit formation",
+      "priority": "H",
+      "baseline": true,
+      "template_able": true,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "03 Publishing Technologies",
+      "order": 3
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 5004,
+    "fields": {
+      "cluster": 5,
+      "name": "Build early-warning dashboard for subscriber drop-off using leading indicators",
+      "description": "Subcluster: Churn prevention\nNotes: Cadence, timing, format consistency — cross-cuts with Surfaces",
+      "priority": "M",
+      "baseline": false,
+      "template_able": false,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "04 Surface Strategies",
+      "order": 4
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 5005,
+    "fields": {
+      "cluster": 5,
+      "name": "Define retention metrics beyond churn: frequency, depth, recency, lifetime value",
+      "description": "Subcluster: Retention measurement\nNotes: ESP-dependent; template-able",
+      "priority": "M",
+      "baseline": false,
+      "template_able": true,
+      "phase": "resources",
+      "assessment_method": "interview",
+      "cross_desk_dep": "04 Surface Strategies",
+      "order": 5
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 5006,
+    "fields": {
+      "cluster": 5,
+      "name": "Build retention dashboard with weekly automated reporting",
+      "description": "Subcluster: Retention measurement",
+      "priority": "H",
+      "baseline": true,
+      "template_able": true,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 6
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 5007,
+    "fields": {
+      "cluster": 5,
+      "name": "Design and deploy win-back email sequence for lapsed subscribers",
+      "description": "Subcluster: Re-engagement",
+      "priority": "M",
+      "baseline": true,
+      "template_able": true,
+      "phase": "activation",
+      "assessment_method": "file_transfer",
+      "cross_desk_dep": "03 Publishing Technologies",
+      "order": 7
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 5008,
+    "fields": {
+      "cluster": 5,
+      "name": "Set inactive subscriber thresholds (e.g., 90 days no open) and automate tagging",
+      "description": "Subcluster: Re-engagement",
+      "priority": "M",
+      "baseline": false,
+      "template_able": true,
+      "phase": "activation",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 8
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 6001,
+    "fields": {
+      "cluster": 6,
+      "name": "Create or strengthen at least one audience community space",
+      "description": "Subcluster: Community building",
+      "priority": "M",
+      "baseline": false,
+      "template_able": false,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 1
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 6002,
+    "fields": {
+      "cluster": 6,
+      "name": "Define community purpose, scope, and governance model",
+      "description": "Subcluster: Community design",
+      "priority": "H",
+      "baseline": true,
+      "template_able": false,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 2
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 6003,
+    "fields": {
+      "cluster": 6,
+      "name": "Select community platform matched to audience behavior (WhatsApp, Discord, forum)",
+      "description": "Subcluster: Community design",
+      "priority": "M",
+      "baseline": false,
+      "template_able": false,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 3
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 6004,
+    "fields": {
+      "cluster": 6,
+      "name": "Write moderation guidelines and escalation paths",
+      "description": "Subcluster: Community design",
+      "priority": "M",
+      "baseline": true,
+      "template_able": true,
+      "phase": "resources",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 4
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 6005,
+    "fields": {
+      "cluster": 6,
+      "name": "Build editorial-to-community content bridge (e.g., discussion prompts from articles)",
+      "description": "Subcluster: Community engagement\nNotes: How editorial output feeds community discussion",
+      "priority": "H",
+      "baseline": true,
+      "template_able": false,
+      "phase": "activation",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 5
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 6006,
+    "fields": {
+      "cluster": 6,
+      "name": "Design member spotlight or contribution pathway (user-generated content, tips)",
+      "description": "Subcluster: Community engagement",
+      "priority": "L",
+      "baseline": false,
+      "template_able": false,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 6
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 6007,
+    "fields": {
+      "cluster": 6,
+      "name": "Define community health metrics and set up monthly tracking",
+      "description": "Subcluster: Community health",
+      "priority": "M",
+      "baseline": true,
+      "template_able": true,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 7
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 6008,
+    "fields": {
+      "cluster": 6,
+      "name": "Design at least 2 event formats matched to different audience segments",
+      "description": "Subcluster: Events strategy",
+      "priority": "M",
+      "baseline": false,
+      "template_able": false,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 8
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 6009,
+    "fields": {
+      "cluster": 6,
+      "name": "Build event-to-content pipeline: live event > recording > archive > distribution",
+      "description": "Subcluster: Events strategy",
+      "priority": "M",
+      "baseline": false,
+      "template_able": true,
+      "phase": "activation",
+      "assessment_method": "interview",
+      "cross_desk_dep": "04 Surface Strategies",
+      "order": 9
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 6010,
+    "fields": {
+      "cluster": 6,
+      "name": "Design hybrid (online + offline) event model with cost estimate",
+      "description": "Subcluster: Events strategy",
+      "priority": "L",
+      "baseline": false,
+      "template_able": false,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 10
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 6011,
+    "fields": {
+      "cluster": 6,
+      "name": "Create event production checklist (reusable template)",
+      "description": "Subcluster: Events operations",
+      "priority": "M",
+      "baseline": false,
+      "template_able": true,
+      "phase": "resources",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 11
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 6012,
+    "fields": {
+      "cluster": 6,
+      "name": "Design post-event audience capture workflow (signup, feedback form, follow-up email)",
+      "description": "Subcluster: Events operations\nNotes: Convert event attendees to regular audience",
+      "priority": "H",
+      "baseline": true,
+      "template_able": true,
+      "phase": "activation",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 12
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 6013,
+    "fields": {
+      "cluster": 6,
+      "name": "Build event feedback loop: insights from events feed back to editorial calendar",
+      "description": "Subcluster: Events operations",
+      "priority": "M",
+      "baseline": true,
+      "template_able": false,
+      "phase": "activation",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 13
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 7001,
+    "fields": {
+      "cluster": 7,
+      "name": "Audit where new audience actually comes from (analytics attribution report)",
+      "description": "Subcluster: Acquisition channels\nNotes: Overlap: Distribution owns channel ops; Audience Dev owns the strategic framing",
+      "priority": "H",
+      "baseline": true,
+      "template_able": true,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "04 Surface Strategies",
+      "order": 1
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 7002,
+    "fields": {
+      "cluster": 7,
+      "name": "Identify 3-5 peer outlets for content exchange or audience sharing pilots",
+      "description": "Subcluster: Peer cross-promotion\nNotes: Leverage SSH network",
+      "priority": "H",
+      "baseline": false,
+      "template_able": true,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "04 Surface Strategies",
+      "order": 2
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 7003,
+    "fields": {
+      "cluster": 7,
+      "name": "Set growth targets per channel with monthly milestones",
+      "description": "Subcluster: Growth targets\nNotes: Baseline expectation: outlet can state a growth target with rationale",
+      "priority": "H",
+      "baseline": true,
+      "template_able": false,
+      "phase": "advisory",
+      "assessment_method": "survey",
+      "cross_desk_dep": "",
+      "order": 3
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 7004,
+    "fields": {
+      "cluster": 7,
+      "name": "Evaluate top 2 paid channels: estimate cost-per-acquisition and run test campaign",
+      "description": "Subcluster: Paid acquisition\nNotes: Out of scope: most outlets lack budget; unsustainable without ongoing spend",
+      "priority": "L",
+      "baseline": false,
+      "template_able": false,
+      "phase": "advisory",
+      "assessment_method": "survey",
+      "cross_desk_dep": "",
+      "order": 4
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 7005,
+    "fields": {
+      "cluster": 7,
+      "name": "Design referral mechanic with tracking and incentive (e.g., refer 3 friends = X)",
+      "description": "Subcluster: Referral programs\nNotes: Audience Dev frames the strategy; Distribution executes",
+      "priority": "M",
+      "baseline": false,
+      "template_able": true,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "04 Surface Strategies",
+      "order": 5
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 8001,
+    "fields": {
+      "cluster": 8,
+      "name": "Audit opt-in status for every subscriber list",
+      "description": "Subcluster: Consent & privacy\nNotes: Non-negotiable for any ESP migration or list import",
+      "priority": "H",
+      "baseline": true,
+      "template_able": true,
+      "phase": "advisory",
+      "assessment_method": "file_transfer",
+      "cross_desk_dep": "",
+      "order": 1
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 8002,
+    "fields": {
+      "cluster": 8,
+      "name": "Complete GDPR / local data protection mapping for all audience data stores",
+      "description": "Subcluster: Consent & privacy\nNotes: Requires legal expertise beyond Audience Desk scope; flag to SSH ops",
+      "priority": "L",
+      "baseline": false,
+      "template_able": false,
+      "phase": "advisory",
+      "assessment_method": "automated",
+      "cross_desk_dep": "",
+      "order": 2
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 8003,
+    "fields": {
+      "cluster": 8,
+      "name": "Run cross-platform dedup (newsletter + CMS + social subscriber lists)",
+      "description": "Subcluster: List hygiene\nNotes: First task for any outlet with an existing list",
+      "priority": "H",
+      "baseline": true,
+      "template_able": true,
+      "phase": "advisory",
+      "assessment_method": "file_transfer",
+      "cross_desk_dep": "",
+      "order": 3
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 8004,
+    "fields": {
+      "cluster": 8,
+      "name": "Merge duplicate subscriber records within ESP",
+      "description": "Subcluster: List hygiene",
+      "priority": "H",
+      "baseline": true,
+      "template_able": true,
+      "phase": "advisory",
+      "assessment_method": "file_transfer",
+      "cross_desk_dep": "",
+      "order": 4
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 8005,
+    "fields": {
+      "cluster": 8,
+      "name": "Set up monthly bounce handling and list cleaning schedule",
+      "description": "Subcluster: List hygiene\nNotes: Manual for small lists; automate later via AI/enrichment APIs",
+      "priority": "M",
+      "baseline": false,
+      "template_able": true,
+      "phase": "advisory",
+      "assessment_method": "survey",
+      "cross_desk_dep": "05 Automation and AI",
+      "order": 5
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 8006,
+    "fields": {
+      "cluster": 8,
+      "name": "Define inactive subscriber threshold and build automated suppression rule",
+      "description": "Subcluster: List hygiene",
+      "priority": "H",
+      "baseline": true,
+      "template_able": true,
+      "phase": "advisory",
+      "assessment_method": "survey",
+      "cross_desk_dep": "",
+      "order": 6
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 8007,
+    "fields": {
+      "cluster": 8,
+      "name": "Evaluate and select a data enrichment tool; run pilot on one segment",
+      "description": "Subcluster: Contact enrichment\nNotes: Re-engagement sequence before purge",
+      "priority": "H",
+      "baseline": true,
+      "template_able": true,
+      "phase": "advisory",
+      "assessment_method": "survey",
+      "cross_desk_dep": "",
+      "order": 7
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 8008,
+    "fields": {
+      "cluster": 8,
+      "name": "Separate organizational subscriptions from individual reader accounts in ESP",
+      "description": "Subcluster: Org vs personal split\nNotes: Relevant for outlets with institutional subscribers; skip for consumer-only lists",
+      "priority": "M",
+      "baseline": false,
+      "template_able": true,
+      "phase": "advisory",
+      "assessment_method": "survey",
+      "cross_desk_dep": "",
+      "order": 8
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 8009,
+    "fields": {
+      "cluster": 8,
+      "name": "Audit content accessibility: screen readers, alt text, color contrast",
+      "description": "Subcluster: Content accessibility\nNotes: Not first-cohort but architectural decisions matter now",
+      "priority": "M",
+      "baseline": false,
+      "template_able": false,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 9
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 8010,
+    "fields": {
+      "cluster": 8,
+      "name": "Publish accessibility standards for content production team",
+      "description": "Subcluster: Content accessibility",
+      "priority": "L",
+      "baseline": false,
+      "template_able": false,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 10
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 8011,
+    "fields": {
+      "cluster": 8,
+      "name": "Evaluate translation/localization needs for top 3 audience segments",
+      "description": "Subcluster: Language access",
+      "priority": "M",
+      "baseline": false,
+      "template_able": false,
+      "phase": "advisory",
+      "assessment_method": "file_transfer",
+      "cross_desk_dep": "03 Publishing Technologies",
+      "order": 11
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 8012,
+    "fields": {
+      "cluster": 8,
+      "name": "Audit current revenue sources and map audience dependency for each",
+      "description": "Subcluster: Revenue readiness",
+      "priority": "M",
+      "baseline": true,
+      "template_able": true,
+      "phase": "advisory",
+      "assessment_method": "automated",
+      "cross_desk_dep": "",
+      "order": 12
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 8013,
+    "fields": {
+      "cluster": 8,
+      "name": "Map audience segments to potential revenue models (subscription, membership, donations)",
+      "description": "Subcluster: Revenue readiness",
+      "priority": "M",
+      "baseline": true,
+      "template_able": true,
+      "phase": "resources",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 13
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 8014,
+    "fields": {
+      "cluster": 8,
+      "name": "Verify data architecture can support future monetization (payment, paywall, CRM)",
+      "description": "Subcluster: Revenue readiness",
+      "priority": "L",
+      "baseline": false,
+      "template_able": false,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 14
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 9001,
+    "fields": {
+      "cluster": 9,
+      "name": "Track watch time per video format",
+      "description": "Subcluster: Video engagement",
+      "priority": "M",
+      "baseline": false,
+      "template_able": false,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 1
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 9002,
+    "fields": {
+      "cluster": 9,
+      "name": "Identify drop-off points in videos",
+      "description": "Subcluster: Video retention",
+      "priority": "M",
+      "baseline": false,
+      "template_able": false,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 2
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 9003,
+    "fields": {
+      "cluster": 9,
+      "name": "Add clear subscribe CTAs in videos",
+      "description": "Subcluster: Video conversion",
+      "priority": "M",
+      "baseline": false,
+      "template_able": false,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 3
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 9004,
+    "fields": {
+      "cluster": 9,
+      "name": "Respond to video comments systematically",
+      "description": "Subcluster: Video community",
+      "priority": "M",
+      "baseline": false,
+      "template_able": false,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 4
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 9005,
+    "fields": {
+      "cluster": 9,
+      "name": "Adapt videos to multiple formats (short/long)",
+      "description": "Subcluster: Video distribution",
+      "priority": "M",
+      "baseline": false,
+      "template_able": false,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 5
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 9006,
+    "fields": {
+      "cluster": 9,
+      "name": "Identify returning viewers vs new viewers",
+      "description": "Subcluster: Video loyalty",
+      "priority": "M",
+      "baseline": false,
+      "template_able": false,
+      "phase": "advisory",
+      "assessment_method": "interview",
+      "cross_desk_dep": "",
+      "order": 6
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 10001,
+    "fields": {
+      "cluster": 10,
+      "name": "Baseline the comment system — platform health, moderation tooling, and spam filtering",
+      "description": "Subcluster: Community & Engagement Assessment\nNotes: Coral by Vox Media (open-source); Disqus; native CMS; AI-assisted moderation essential; community guidelines enforcement",
+      "priority": "M",
+      "baseline": false,
+      "template_able": true,
+      "phase": "activation",
+      "assessment_method": "interview",
+      "cross_desk_dep": "03 Publishing Technologies",
+      "order": 1
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 10002,
+    "fields": {
+      "cluster": 10,
+      "name": "Evaluate community platform fit and live event capability",
+      "description": "Subcluster: Community & Engagement Assessment\nNotes: Discord, Circle, Mighty Networks; engagement metrics beyond pageviews; community-to-CMS integration for editorial intelligence",
+      "priority": "L",
+      "baseline": false,
+      "template_able": false,
+      "phase": "advisory",
+      "assessment_method": "survey",
+      "cross_desk_dep": "03 Publishing Technologies",
+      "order": 2
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 11001,
+    "fields": {
+      "cluster": 11,
+      "name": "Comment platform selection & configuration (Coral, Disqus, native CMS)",
+      "description": "Subcluster: Comment & Discussion Systems\nNotes: SURFACE CROSS-LISTING — lives in 02 Audience Development, shown here for dependency visibility. Comment platform deployment has pub tech plumbing (embed, SSO, webhook handlers) but the ownership + moderation strategy is audience dev. Coral (Vox Media open source) is the gold standard for newsroom-aligned comments; Disqus for lower-lift deployments; native CMS comments for WordPress-minimal cohort members.",
+      "priority": "M",
+      "baseline": false,
+      "template_able": true,
+      "phase": "activation",
+      "assessment_method": "interview",
+      "cross_desk_dep": "03 Publishing Technologies",
+      "order": 1
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 11002,
+    "fields": {
+      "cluster": 11,
+      "name": "Moderation tooling, spam filtering & community guidelines enforcement",
+      "description": "Subcluster: Comment & Discussion Systems\nNotes: SURFACE CROSS-LISTING — lives in 02 Audience Development. Moderation policy design and community guidelines authoring are audience dev concerns; pub tech supports the tooling layer (Perspective API, Akismet, platform-native moderation queues). Anchors to cluster 08 Trust & Provenance for editorial transparency on moderation decisions.",
+      "priority": "M",
+      "baseline": false,
+      "template_able": true,
+      "phase": "activation",
+      "assessment_method": "interview",
+      "cross_desk_dep": "03 Publishing Technologies",
+      "order": 2
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 11003,
+    "fields": {
+      "cluster": 11,
+      "name": "Member identity connection to analytics and revenue systems",
+      "description": "Subcluster: Membership Community Platforms\nNotes: SURFACE CROSS-LISTING — lives in 02 Audience Development. Member identity connection depends on cluster 05 r100 identity resolution (first-party segments) and cluster 10 Paywall sidecar (entitlement state). Pub tech provides the plumbing (SSO, entitlement APIs, event tagging); audience dev owns the audience model and revenue linkage strategy. Explicit cross-cluster dependency chain: cluster 05 identity → cluster 10 entitlement → community platform identity.",
+      "priority": "M",
+      "baseline": false,
+      "template_able": false,
+      "phase": "activation",
+      "assessment_method": "interview",
+      "cross_desk_dep": "03 Publishing Technologies",
+      "order": 3
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 12001,
+    "fields": {
+      "cluster": 12,
+      "name": "Team metrics training — baseline data interpretation capability",
+      "description": "Subcluster: Data Literacy & Team Capability\nNotes: Programme-level consultation deliverable. Baseline data interpretation exercise: can the team read a dashboard and draw conclusions? Focus on engaged time, not pageviews. Materials are reusable cohort-wide.",
+      "priority": "H",
+      "baseline": false,
+      "template_able": true,
+      "phase": "activation",
+      "assessment_method": "survey",
+      "cross_desk_dep": "03 Publishing Technologies",
+      "order": 1
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 12002,
+    "fields": {
+      "cluster": 12,
+      "name": "Data champion development — designate and upskill a data point-person (Bus Factor > 1)",
+      "description": "Subcluster: Data Literacy & Team Capability\nNotes: Programme-level consultation. Bus Factor > 1 — reduce dependency on a single analyst. Designate and upskill a data point-person per newsroom. Train on GA4 / PostHog / Looker Studio. Per-newsroom context, not template-able.",
+      "priority": "H",
+      "baseline": false,
+      "template_able": false,
+      "phase": "activation",
+      "assessment_method": "survey",
+      "cross_desk_dep": "03 Publishing Technologies",
+      "order": 2
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 12003,
+    "fields": {
+      "cluster": 12,
+      "name": "Audience segmentation — behavioural, demographic, engagement-based",
+      "description": "Subcluster: Activation Layer\nNotes: Segment-based strategy; frequent readers, social sharers, conversion-ready; Piano benchmarks: 19% registered-to-subscriber conversion (avg); top performers >2.2%",
+      "priority": "H",
+      "baseline": false,
+      "template_able": false,
+      "phase": "activation",
+      "assessment_method": "interview",
+      "cross_desk_dep": "03 Publishing Technologies",
+      "order": 3
+    }
+  },
+  {
+    "model": "capabilities.capabilityitem",
+    "pk": 12004,
+    "fields": {
+      "cluster": 12,
+      "name": "Editorial feedback loop — content performance → editorial prioritisation",
+      "description": "Subcluster: Activation Layer\nNotes: Chartbeat, Ophan (Guardian), STELA (NYT); data-informed not data-driven; content performance → editorial prioritisation; real-time newsroom dashboards",
+      "priority": "H",
+      "baseline": false,
+      "template_able": false,
+      "phase": "activation",
+      "assessment_method": "interview",
+      "cross_desk_dep": "04 Surface Strategies",
+      "order": 4
+    }
+  }
 ]
