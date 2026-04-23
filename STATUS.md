@@ -1,63 +1,72 @@
-# Insighter — status after Thursday resume
+# Insighter — status
 
-## What changed this session
+## This session
 
-Three things shipped; one blocked on your call.
+| Commit    | What                                                     |
+|-----------|----------------------------------------------------------|
+| `942a337` | Split level scale (depth vs bus-factor)                  |
+| `6bb941f` | Add MIT LICENSE                                          |
+| `52aca24` | Update STATUS + DECISIONS mid-session                    |
+| `84f523c` | Rebuild taxonomy fixture from L3 tasks                   |
+| *this*    | Close out DECISIONS after #7 resolved                    |
 
-| # | Task | Outcome | Commit |
-|---|------|---------|--------|
-| 1 | Split level scale (depth vs bus-factor) | ✅ done | `942a337` |
-| 2 | Add MIT LICENSE | ✅ done | `6bb941f` |
-| 3 | Backfill taxonomy metadata from xlsx | ⛔ blocked on schema decision | — |
-| 4 | Update STATUS + DECISIONS | ✅ done | this commit |
+## Current state
 
-## Blocker — taxonomy granularity
+- **Data model**: unchanged since the earlier schema. `CapabilityState`
+  now has `led_by_champion: bool` distinct from `level` (depth).
+- **Taxonomy**: 12 clusters × 90 items loaded from the desk xlsx, with
+  full metadata per item. L2 subcluster is encoded in `description`.
+- **Tests**: 9 passing.
+- **Git**: `main` is 5 commits ahead of `origin/main`. Clean history —
+  no xlsx blobs in any commit.
 
-The xlsx metadata is at **L3 task** level (90 tasks), our model maps
-`CapabilityItem` to **L2 subcluster** (43 items). Metadata varies within
-L2 groups for most fields — lossless aggregation isn't available.
+## How to reload taxonomy from scratch
 
-See **DECISIONS.md #7** for the full breakdown and 4 options. Recommended
-option is (a): rebuild fixture as L3 tasks. Default on next resume
-unless you pick otherwise.
-
-## Test state
-
-9 tests passing (added one for the champion flag being independent of
-depth).
-
-## Git state
-
-```
-6bb941f Add MIT LICENSE
-942a337 Split level scale: separate depth from bus-factor
-db62a70 Add STATUS.md summarising overnight execution stop
-51c08c8 Build outlet detail + state-change + diagnostic-entry flows
-ec676e0 Seed audience-development taxonomy from brief
-4828a37 Define core data model for capability tracker
-ab14d2a Scaffold Django 5 project with capabilities + diagnostics apps
+```bash
+# xlsx must be present at the project root, gitignored
+.venv/bin/python scripts/build_taxonomy_fixture.py
+.venv/bin/python manage.py shell -c "
+from capabilities.models import Cluster, CapabilityItem, CapabilityState
+CapabilityState.objects.all().delete()
+CapabilityItem.objects.all().delete()
+Cluster.objects.all().delete()
+"
+.venv/bin/python manage.py loaddata taxonomy_seed
 ```
 
-`main` is 2 commits ahead of `origin/main` (you rewrote the earlier
-bad commit out, so history is clean — no xlsx blob anywhere).
+## Decisions resolved this session
 
-## Pending (unchanged)
+- #1 level scale → split
+- #2 license → MIT
+- #3 taxonomy metadata → backfilled from xlsx (part of #7)
+- #7 taxonomy granularity → option (a), L3 tasks are items
 
-- **Friday** (requires your input on prompts + API key): Anthropic SDK,
-  synthesis endpoint, mismatch flagger, diff UI
-- **Saturday**: "why stuck" view, sponsor matcher, stubs, read-only
-  taxonomy browser, first demo video
-- **Sunday**: README, deploy doc, final video, summary, buffer
+## Decisions still pending
+
+- #4 mismatch flagger prompt (Friday)
+- #5 seed outlet voices + diagnostic notes (you)
+- #6 demo UX polish (Saturday)
+
+## Pending work
+
+- **Friday**: Anthropic SDK wrapper + prompt caching, synthesis
+  tool-use endpoint, mismatch flagger endpoint, diff UI for
+  reviewing proposed state changes.
+- **Saturday**: "why is this outlet stuck" composed view, sponsor
+  matcher filtered table, stub screens for Specialist deployment +
+  CheckIn with seed data, read-only taxonomy browser (not admin),
+  first demo video cut.
+- **Sunday**: README + deploy doc, written summary, final demo
+  video re-record, buffer.
 
 ## What I did not touch
 
-Per overnight rules:
-- No LLM integration code.
-- No seed outlet or diagnostic content.
+- No LLM integration.
+- No seed outlet / diagnostic content.
 - No demo UX polish.
-- No schema rebuild for the L3-task question — waiting for your call.
+- No schema changes beyond the `0003_capabilitystate_led_by_champion` migration.
 
 ## Time budget
 
-~30 min wall-clock this session. 2 commits landed (+ 1 to wrap now).
-Hard stop cap of 5 not hit.
+~45 min wall-clock this session. 5 commits landed. Hard stop cap hit
+cleanly at the end of the L3-fixture work, as intended.
