@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}Review proposals — {{ diagnostic.outlet.name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl">
+  <div class="flex items-start justify-between mb-4">
+    <div>
+      <h1 class="text-2xl font-semibold">Review synthesised state changes</h1>
+      <p class="text-sm text-stone-600">
+        {{ diagnostic.outlet.name }} · diagnostic {{ diagnostic.date }} · conducted by {{ diagnostic.conducted_by.username }}
+      </p>
+    </div>
+    <a href="{% url 'diagnostics:diagnostic_detail' diagnostic.pk %}" class="text-sm text-stone-600 hover:text-stone-900">← back to diagnostic</a>
+  </div>
+
+  {% if usage %}
+  <div class="mb-6 text-xs text-stone-500 border rounded px-3 py-2 bg-white">
+    <span class="font-mono">{{ model }}</span>
+    · input {{ usage.input_tokens }} tok
+    · output {{ usage.output_tokens }} tok
+    · cache read {{ usage.cache_read_input_tokens }}
+    · cache write {{ usage.cache_creation_input_tokens }}
+  </div>
+  {% endif %}
+
+  {% if rows %}
+  <form method="post" action="{% url 'diagnostics:synthesis_accept' diagnostic.pk %}" class="space-y-4">
+    {% csrf_token %}
+    {% for row in rows %}
+    <article class="bg-white border rounded p-4 space-y-3">
+      <header class="flex items-start justify-between gap-4">
+        <div>
+          <div class="text-xs text-stone-500 uppercase tracking-wide">{{ row.item.cluster.name }}{% if row.item.subcluster %} · {{ row.item.subcluster }}{% endif %}</div>
+          <h2 class="font-medium">{{ row.item.name }}</h2>
+          <div class="text-xs text-stone-500 mt-0.5">
+            {% if row.current %}
+              current: <span class="font-medium">{{ row.current.get_level_display }}</span>{% if row.current.led_by_champion %} · champion{% endif %}
+            {% else %}
+              current: no signal
+            {% endif %}
+            · confidence {{ row.proposal.confidence }}/5
+          </div>
+        </div>
+        <div class="flex items-center gap-1 text-xs">
+          <label class="inline-flex items-center gap-1 cursor-pointer">
+            <input type="radio" name="action_{{ row.item.id }}" value="accept" checked class="accent-emerald-600">
+            accept
+          </label>
+          <label class="inline-flex items-center gap-1 cursor-pointer">
+            <input type="radio" name="action_{{ row.item.id }}" value="reject" class="accent-stone-500">
+            reject
+          </label>
+        </div>
+      </header>
+
+      <div class="grid md:grid-cols-4 gap-3 text-sm">
+        <label class="md:col-span-1">
+          <span class="block text-xs text-stone-500 mb-1">Level</span>
+          <select name="level_{{ row.item.id }}" class="w-full border rounded p-2 text-sm">
+            {% for choice in row.level_choices %}
+              <option value="{{ choice }}" {% if choice == row.proposal.proposed_level %}selected{% endif %}>{{ choice }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        <label class="md:col-span-1 flex items-end gap-2 text-sm">
+          <input type="checkbox" name="champion_{{ row.item.id }}" {% if row.proposal.led_by_champion %}checked{% endif %} class="h-4 w-4 accent-emerald-600">
+          <span class="text-xs text-stone-600">Led by outlet-side data champion</span>
+        </label>
+        <div class="md:col-span-2 text-xs text-stone-500">
+          <span class="block mb-1">Rationale (from model)</span>
+          <p class="italic">{{ row.proposal.rationale }}</p>
+        </div>
+      </div>
+
+      <label class="block text-sm">
+        <span class="block text-xs text-stone-500 mb-1">Evidence excerpt (verbatim from notes — edit if needed)</span>
+        <textarea name="evidence_{{ row.item.id }}" rows="3" class="w-full border rounded p-2 text-sm font-mono">{{ row.proposal.evidence_excerpt }}</textarea>
+      </label>
+    </article>
+    {% endfor %}
+
+    <div class="flex items-center justify-end gap-2 pt-2">
+      <a href="{% url 'diagnostics:diagnostic_detail' diagnostic.pk %}" class="px-4 py-2 text-sm rounded border border-stone-300 hover:bg-stone-100">Cancel</a>
+      <button type="submit" class="px-4 py-2 text-sm rounded bg-stone-900 text-white hover:bg-stone-700">Apply accepted proposals</button>
+    </div>
+  </form>
+  {% else %}
+  <div class="bg-white border rounded p-6 text-sm text-stone-600">
+    The model proposed no state changes from these notes. That's a valid outcome —
+    the rules tell it to prefer silence over thin evidence.
+    <div class="mt-3">
+      <a href="{% url 'diagnostics:diagnostic_detail' diagnostic.pk %}" class="underline">Back to diagnostic</a>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
