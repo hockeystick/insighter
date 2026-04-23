@@ -1,0 +1,19 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      DJANGO_DEBUG: "1"
+      DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1,0.0.0.0"
+    volumes:
+      - insighter-db:/app/data
+      # Mount source for dev so edits hot-reload without a rebuild.
+      # Comment out for a sealed image in CI.
+      - ./:/app
+    working_dir: /app
+    restart: unless-stopped
+
+volumes:
+  insighter-db:
