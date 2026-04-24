@@ -1,63 +1,72 @@
 # Insighter
 
-A capability state tracker for shared services newsroom hubs — built
-during the Opus 4.7 × Claude Code hackathon (Apr 22–26 2026).
+**Status: archived.** A hackathon exploration that reached a working prototype
+and then stopped. Not submitted, no demo video, no further development
+planned. This repo is kept as a reference for the approach, not as active
+software.
 
-## The problem
+Built during the Claude Opus 4.7 × Claude Code hackathon (April 2026).
 
-Shared services hubs match three sides of a marketplace — outlets,
-specialists, sponsors — to move independent newsrooms through structured
-capability development. At 10 outlets the matching fits in human heads.
-Past 50, it doesn't. The fix isn't a task tracker; it's a **live record
-of capability state** anchored to a shared taxonomy, where the signal
-comes from diagnostic conversations rather than outlet self-report.
+---
 
-## What's in v0.1
+## What it was
 
-- **Capability state tracker** for an audience development service desk.
-  12 clusters, 90 capabilities, per-item metadata (priority, baseline,
-  template-ability, phase, assessment method, cross-desk dependency).
-- **Append-only state history** per (outlet, capability). Current state
-  = most recent row. Every state change carries required evidence.
-- **Depth × bus-factor split**: `level` captures how deeply the practice
-  has landed (Unknown / Aware / Practising / Embedded). A separate
-  `led_by_champion` flag captures whether an outlet-side data champion
-  is sustaining it — honest to the "Bus Factor > 1" KPI.
-- **Diagnostic-first workflow**: paste raw call notes, attach state
-  changes to a diagnostic, preserve evidence excerpts.
-- **Read-only taxonomy browser** at `/taxonomy/` for demos and onboarding
-  without exposing the admin UI.
-- **Django admin** for non-coder taxonomy maintenance.
+A capability state tracker for shared services newsroom hubs — a marketplace
+where three sides (outlets, specialists, sponsors) need to stay in sync as
+outlets move through a structured capability development programme. Today
+that matching happens in human heads during diagnostic calls. That fits at
+ten outlets; it breaks past fifty.
 
-## What's coming (hackathon roadmap)
+The idea: make the desk's existing capability taxonomy a live, per-outlet
+state store, anchored to diagnostic-conversation evidence, with Claude
+Opus 4.7 reading raw call notes against the taxonomy to propose state
+changes that a specialist reviews and accepts.
 
-- **Opus 4.7 synthesis**: paste a diagnostic call's raw notes → model
-  proposes structured state changes with evidence excerpts, reviewer
-  diffs and accepts. Tool-use with prompt caching on the taxonomy.
-- **Mismatch flagger**: cross-reference outlet's stated priorities
-  against recent state changes, surface drift.
-- **"Why is this outlet stuck?"** — a single composed view combining
-  state, recent diagnostics, bus-factor, and the mismatch flag.
-- **Sponsor matcher**: tag outlets, specialists, and sponsors on the
-  same dimensions (region, language, format, topic) so routing doesn't
-  require human re-analysis.
-- **Specialist deployment ledger** and **30/60/90 behavioural check-ins**:
-  schema present, UI stubbed; full flows post-hackathon.
+## What's in the code
 
-## Stack
+Enough to demonstrate the approach end-to-end on a developer's machine:
 
-- Django 5, SQLite, HTMX-ready (no JS build step)
-- Tailwind via CDN
-- `anthropic` SDK with prompt caching for the model calls (coming)
+- **Capability state tracker.** Django 5 + SQLite + HTMX-ready templates.
+  12 clusters, 90 capabilities (sourced from an internal desk xlsx, not
+  committed).
+- **Append-only state history.** Every state change on every capability is
+  a new row with a required evidence excerpt, timestamp, and author.
+- **Depth × bus-factor split.** `level` (Unknown / Aware / Practising /
+  Embedded) is depth of practice; a separate `led_by_champion` flag
+  captures whether an outlet-side data champion is sustaining the
+  capability. The two vary independently.
+- **Claude Opus 4.7 synthesis** (`insighter/llm/synthesis.py`). Tool-use
+  request with prompt caching on the taxonomy block and outlet-state
+  block. Model returns proposed state changes with verbatim evidence
+  excerpts; reviewer accepts / edits / rejects per proposal in a diff UI.
+- **Intent-vs-evidence mismatch flagger** (`insighter/llm/mismatch.py`).
+  Cross-references outlet's stated priorities (from diagnostic narrative)
+  against the trajectory of recent state changes; returns narrative flags.
+  Cached on the outlet so the view renders instantly.
+- **"Why is this outlet stuck?" composed view.** Single screen combining
+  the mismatch flag, bus-factor indicators, per-cluster level rollup, and
+  recent trajectory.
+- **Sponsor matcher.** Sponsors, outlets, and specialists share one
+  SharedTag vocabulary (region, language, format, topic). Matching is
+  tag-set intersection — no LLM.
+- **Read-only taxonomy browser** at `/taxonomy/` for use in place of
+  Django admin on camera.
+- **Docker Compose self-host**, seed commands for sponsors / specialists /
+  tags and for throwaway stub outlets, and 24 passing tests (LLM flows
+  fully mocked in tests; no network calls).
 
-Chosen for: ships fast on a deadline, Django admin gives non-coders
-taxonomy editing for free, no managed services needed for self-hosting.
-Rejected Next.js + Supabase (self-host story is heavy), FastAPI + custom
-admin (rebuilding Django admin wastes a day).
+## What's not there
+
+- No demo video, no submission
+- The user's three real seed outlets were never written — only the
+  throwaway `seed_stub_outlets` command has concrete outlet data
+- Deployment ledger and 30/60/90 behavioural check-in screens are stubs
+  (schema wired, UX for scheduling and response capture not built)
+- Production-grade auth posture (see DEPLOY.md § Security posture)
 
 ## Running it locally
 
-Requires Python 3.11+.
+Requires Python 3.11+ and an Anthropic API key for the LLM flows.
 
 ```bash
 python3 -m venv .venv
@@ -66,70 +75,29 @@ python3 -m venv .venv
 .venv/bin/python manage.py createsuperuser
 .venv/bin/python manage.py loaddata taxonomy_seed
 .venv/bin/python manage.py seed_demo_refs        # sponsors + specialists + tags
-export ANTHROPIC_API_KEY=sk-ant-...              # for synthesis + mismatch
+.venv/bin/python manage.py seed_stub_outlets     # 3 placeholder outlets for exercising the flows
+export ANTHROPIC_API_KEY=sk-ant-...
 .venv/bin/python manage.py runserver
 ```
 
 Then:
 - `http://127.0.0.1:8000/taxonomy/` — public read-only taxonomy browser
-- `http://127.0.0.1:8000/admin/` — add an Outlet (and log in)
-- `http://127.0.0.1:8000/` — outlet list → detail view
+- `http://127.0.0.1:8000/admin/` — admin
+- `http://127.0.0.1:8000/` — outlet list → detail → synthesis
 
-One-command Docker path is in [DEPLOY.md](DEPLOY.md). The 3-min
-demo script is in [DEMO.md](DEMO.md).
+Tests: `.venv/bin/python manage.py test` (nothing hits the network).
 
-Tests:
-```bash
-.venv/bin/python manage.py test
-```
-Tests never hit the Anthropic API — the synthesis flow is fully mocked.
+Docker Compose path is in [DEPLOY.md](DEPLOY.md).
 
-## Rebuilding the taxonomy from source
+## Decisions, architecture notes
 
-The taxonomy fixture is generated from the desk's internal xlsx (not
-committed). If you have the xlsx:
-
-```bash
-.venv/bin/pip install -r requirements-dev.txt
-.venv/bin/python scripts/build_taxonomy_fixture.py
-```
-
-Reload into an existing DB:
-```bash
-.venv/bin/python manage.py shell -c "
-from capabilities.models import Cluster, CapabilityItem, CapabilityState
-CapabilityState.objects.all().delete()
-CapabilityItem.objects.all().delete()
-Cluster.objects.all().delete()
-"
-.venv/bin/python manage.py loaddata taxonomy_seed
-```
-
-## Security posture
-
-v0.1 is **staff-only, single-tenant**. Authenticated views require
-Django login. Audit trail comes from the append-only `CapabilityState`
-log. Access controls appropriate for high-risk-environment users
-(2FA, granular per-outlet permissions, field-level redaction) are
-**v0.2 scope** — do not deploy v0.1 as-is in those contexts.
-
-## Project conventions
-
-- The diagnostic conversation is the source of truth. Data structure
-  exists to support it, not replace it.
-- State changes require evidence excerpts — no empty rows.
-- Claude/Opus 4.7 is used where semantic reading against structured
-  state adds judgment a template can't: diagnostic synthesis and
-  mismatch flagging. Not as a wrapped chat box.
-- Everything reproducible: fixtures from the xlsx, DB from migrations,
-  no hand-edited binary state.
+See [DECISIONS.md](DECISIONS.md) for the design decisions that landed
+(level-scale split, license choice, taxonomy granularity, synthesis +
+mismatch prompt rule-sets) and small architectural notes — L2 subcluster
+is parsed from `description` rather than modelled, the taxonomy fixture
+is generated from an xlsx that's intentionally gitignored, prompt cache
+hits depend on deterministic serialization.
 
 ## License
 
-MIT. See [LICENSE](LICENSE).
-
-## Acknowledgements
-
-Built by Ali Mahmood during the Opus 4.7 hackathon. The audience
-development taxonomy is the working document of the service desk at
-[the hub]; reproduced here with permission.
+MIT — see [LICENSE](LICENSE).
